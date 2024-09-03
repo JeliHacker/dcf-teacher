@@ -1,10 +1,10 @@
 import React from 'react';
 
-function SectionComponent({ title, content, onComplete, completed }) {
+function SectionComponent({ title, children, onComplete, completed }) {
   return (
     <div className="section">
       <h2>{title}</h2>
-      <p>{content}</p>
+      {children}
       {!completed && (
         <button onClick={onComplete}>Complete Section</button>
       )}

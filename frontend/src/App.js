@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import GuideComponent from './components/GuideComponent';
 import SectionComponent from './components/SectionComponent';
+import StockSelection from './components/StockSelection';
+import FinancialStatements from './components/FinancialStatements';
+import TeacherChat from './components/TeacherChat';
 import './App.css';
 
 function App() {
   const [currentSection, setCurrentSection] = useState(0);
+  const [selectedStock, setSelectedStock] = useState(null);
   const [sections, setSections] = useState([
     { title: 'Step 1: Select a Company', content: 'Select a company to analyze.', unlocked: true, completed: false },
     { title: 'Step 2: Gather Data', content: 'Gather financial data for the selected company.', unlocked: false, completed: false },
@@ -31,6 +35,18 @@ function App() {
     setCurrentSection(index);
   };
 
+  const handleStockSelect = (stockName) => {
+    // Assuming that you have a way to determine the CIK and accession number based on the selected stock
+    const stockDetails = {
+        'Apple': { cik: '0000320193', accessionNumber: '0000320193-21-000065' },
+        'Tesla': { cik: '0001318605', accessionNumber: '0001318605-21-000063' },
+        'Nike': { cik: '0000320187', accessionNumber: '0000320187-21-000056' },
+    };
+
+    setSelectedStock(stockDetails[stockName]);
+    completeSection();
+};
+
   return (
     <div className="App">
       <GuideComponent
@@ -38,13 +54,41 @@ function App() {
         sections={sections}
         navigateToSection={navigateToSection}
       />
-      <SectionComponent
-        title={sections[currentSection].title}
-        content={sections[currentSection].content}
-        onComplete={completeSection}
-        completed={sections[currentSection].completed}
+      {currentSection === 0 ? (
+        <SectionComponent
+          title={sections[currentSection].title}
+          onComplete={completeSection}
+          completed={sections[currentSection].completed}
+        >
+          <StockSelection onSelectStock={handleStockSelect} />
+        </SectionComponent>
+      ) : currentSection === 1 && selectedStock ? (
+        <SectionComponent
+            title={sections[currentSection].title}
+            onComplete={completeSection}
+            completed={sections[currentSection].completed}
+        >
+            <FinancialStatements
+                cik={selectedStock.cik}
+                accessionNumber={selectedStock.accessionNumber}
+                onComplete={completeSection}
+            />
+        </SectionComponent>
+      ) : (
+        <SectionComponent
+          title={sections[currentSection].title}
+          content={sections[currentSection].content}
+          onComplete={completeSection}
+          completed={sections[currentSection].completed}
+        />
+      )}
+      <TeacherChat 
+       currentSection={currentSection}
+       sections={sections}
+       navigateToSection={navigateToSection}
       />
     </div>
+
   );
 }
 
