@@ -1,6 +1,9 @@
 # DCF Teacher
+## Next Steps
+- display 3 financial statements in sections 2: Balance Sheet, Income Statement, Statement of Cash Flows
+- add answer submission box for user to type numbers. Evaluate answers, require correct answer before user can move on.
+  
 ## AfroTech AI Hackathon 2024
-
 
 
 https://newprairiepress.org/cgi/viewcontent.cgi?article=1127&context=jft#:~:text=The%20financial%20survey%20revealed%20the,sample%20indicate%20that%20those%20with
