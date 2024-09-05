@@ -3,6 +3,7 @@ from flask_cors import CORS
 import os
 import requests
 import google.generativeai as genai
+from annual_report_data import return_csv_data
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -24,6 +25,11 @@ def home():
 @app.route('/api/test', methods=['GET'])
 def test_route():
     return jsonify({"message": "Test route working!"})
+
+@app.route('/api/financial-data', methods=['GET'])
+def get_financial_data():
+    df = return_csv_data()
+    return jsonify(df.to_dict(orient="records"))
 
 
 @app.route('/api/ask', methods=['POST'])

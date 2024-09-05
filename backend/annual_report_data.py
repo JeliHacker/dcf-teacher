@@ -13,7 +13,8 @@ HEADERS = {'User-Agent': os.getenv('USER_AGENT')}
 BASE_URL = "https://www.sec.gov/Archives/edgar/data"
 
 def get_cik_from_symbol(stock_symbol, add_zeroes: bool = False):
-    with open("./backend/all_tickers.txt", 'r') as file:
+    all_tickers_file_path = os.path.join(os.path.dirname(__file__), 'all_tickers.txt')
+    with open(all_tickers_file_path, 'r') as file:
         for line in file:
             parts = line.strip().split(', ')
             if len(parts) >= 4 and parts[1] == stock_symbol:
@@ -32,12 +33,14 @@ def get_all_tickers():
         headers=HEADERS
     ).json()
 
-    with open("./backend/all_tickers.csv", "w") as file:
+    all_tickers_txt_file_path = os.path.join(os.path.dirname(__file__), 'all_tickers.txt')
+    all_tickers_csv_file_path = os.path.join(os.path.dirname(__file__), 'all_tickers.csv')
+    with open(all_tickers_csv_file_path, "w") as file:
         for key in company_tickers:
             curr = company_tickers[key]
             file.write(f"{key},{curr['ticker']},{curr['cik_str']},{curr['title']}\n")
 
-    convert_csv_to_txt("./backend/all_tickers.csv", "./backend/all_tickers.txt")
+    convert_csv_to_txt(all_tickers_csv_file_path, all_tickers_txt_file_path)
 
 
 
@@ -94,7 +97,10 @@ def get_financial_statements_urls_given_accession_number(accession_number):
 COMPANY_CIK = get_cik_from_symbol("AAPL", add_zeroes=True)
 
 
-def main():
+def return_csv_data():
+    """
+    RENAME THIS FUNCTION
+    """
     print("cik = ", COMPANY_CIK)
     filings = get_10k_filings(cik=COMPANY_CIK)
     
@@ -104,31 +110,44 @@ def main():
     most_recent_10k = filings[0]
     sections_urls = get_financial_statements_urls_given_accession_number(most_recent_10k['accessionNumber'])
 
-    print(sections_urls[4])
-    response = requests.get(url=sections_urls[4], headers=HEADERS)
-    soup = BeautifulSoup(response.content, 'html.parser')
-    print(type(soup))
-    with open("section5.html", "w", encoding='utf-8') as file:
-        file.write(soup.prettify())
+    print("section_urls", sections_urls)
+    i = 1
+    for url in sections_urls:
+        if i != 4:
+            i += 1
+            continue
+        print("i", i, url)
+        response = requests.get(url=url, headers=HEADERS)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        first_table = soup.find('table')
+        print(first_table)
+        print(type(first_table))
 
-    # Extract the table headers (dates)
-    headers = []
-    for th in soup.find_all('th', class_='th'):
-        headers.append(th.get_text(strip=True))
+        header = first_table.find_all('th')[2:]  # Ignore the first two 'th' rows (non-relevant)
+        years = [h.text.strip() for h in header]
 
-    # Extract the row data (items and values)
-    data = []
-    rows = soup.find_all('tr')
-    for row in rows[2:]:  # Skip the first two rows (header and category label)
-        cols = row.find_all('td')
-        item = cols[0].get_text(strip=True)
-        values = [col.get_text(strip=True).replace('$', '').replace(',', '') for col in cols[1:]]
-        data.append([item] + values)
+        # Now, we extract the data rows (each financial entry)
+        rows = first_table.find_all('tr')[3:]  # Skipping the header rows
+        data = []
 
-    # Create a Pandas DataFrame
-    df = pd.DataFrame(data, columns=["Item"] + headers)
+        for row in rows:
+            columns = row.find_all('td')
+            if len(columns) > 1:
+                # Extract label and values for each year
+                label = columns[0].text.strip()
+                values = [col.text.strip() for col in columns[1:]]
+                data.append([label] + values)
 
-    # Display the DataFrame
-    print(df)
+        # Create a DataFrame to better structure the data
+        df = pd.DataFrame(data, columns=['Metric'] + years)
 
-main()
+        # Write the extracted data to a CSV or HTML file
+        df.to_csv('financial_data.csv', index=False)
+
+        # Display the DataFrame
+        print(df)
+
+        i += 1
+
+        return df
