@@ -1,7 +1,19 @@
 # DCF Teacher
+## How to Contribute
+1. Clone the project with `git clone https://github.com/JeliHacker/dcf-teacher-afrotech.git`
+2. Install the dependencies with `npm install`
+3. Create a `.env` file in the `/backend` folder. You can use this command: `touch /backend/.env`.
+4. You need two environment variables: `API_KEY` and `USER_AGENT`. For the `API_KEY`, you can get a Gemini key from [the docs](https://ai.google.dev/gemini-api/docs/api-key). For `USER_AGENT`, put in an email address. 
+    Example .env file:
+    ```
+    API_KEY="fiqmD31Ficirm5$jdoaW"
+    USER_AGENT="ilovetolearn@gmail.com"
+    ```
+5. You're all set! Look at the [issues](https://github.com/JeliHacker/dcf-teacher-afrotech/issues) tab or read the rest of the README to find something to work on, open a PR and describe your changes. 
 ## Next Steps
 - display 3 financial statements in sections 2: Balance Sheet, Income Statement, Statement of Cash Flows
 - add answer submission box for user to type numbers. Evaluate answers, require correct answer before user can move on.
+
   
 ## AfroTech AI Hackathon 2024
 
@@ -18,3 +30,6 @@ Of course, picking individual stocks, much less calculating their intrinsic valu
 
 Direct quote from the study: "To entice the African American community to be more active investors, it seems that
 part of a holistic solution must include financial education."
+
+### Possibly helpful resources
+https://github.com/alphanome-ai/sec-parser
