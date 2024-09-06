@@ -11,6 +11,11 @@ load_dotenv(find_dotenv())
 
 HEADERS = {'User-Agent': os.getenv('USER_AGENT')}
 BASE_URL = "https://www.sec.gov/Archives/edgar/data"
+FINANCIAL_STATEMENT_KEYWORDS = {
+    'income_statement': ['Income Statement', 'CONSOLIDATED STATEMENTS OF INCOME', 'Statement of Operations', 'Statement of Earnings', 'CONSOLIDATED STATEMENTS OF OPERATIONS'],
+    'balance_sheet': ['Balance Sheet', 'Consolidated Statements of Financial Condition'],
+    'cash_flow_statement': ['Cash Flow Statement', 'Statement of Cash Flows', 'Statements of Cash Flows']
+}
 
 def get_cik_from_symbol(stock_symbol, add_zeroes: bool = False):
     all_tickers_file_path = os.path.join(os.path.dirname(__file__), 'all_tickers.txt')
@@ -22,7 +27,7 @@ def get_cik_from_symbol(stock_symbol, add_zeroes: bool = False):
                     return parts[2].zfill(10)
                 else:
                     return parts[2]
-    print("Error in get_cik_from_symbol. Could not find a CIK for that stock ticker.")
+    print(f"Error in get_cik_from_symbol. Could not find a CIK for that stock ticker, {stock_symbol}.")
     return None
 
 
@@ -41,9 +46,6 @@ def get_all_tickers():
             file.write(f"{key},{curr['ticker']},{curr['cik_str']},{curr['title']}\n")
 
     convert_csv_to_txt(all_tickers_csv_file_path, all_tickers_txt_file_path)
-
-
-
 
 
 def get_10k_filings(cik):
@@ -65,8 +67,6 @@ def get_10k_filings(cik):
             indices_10Ks.append(i)
         i += 1
 
-    print(indices_10Ks)
-
     filings_10Ks = []
     # Construct URLs for 10-K filings
     filing_urls = []
@@ -83,10 +83,10 @@ def get_10k_filings(cik):
     return filings_10Ks
 
 
-def get_financial_statements_urls_given_accession_number(accession_number):
+def get_financial_statements_urls_given_accession_number(accession_number, cik):
     urls = []
     for i in range(1, 10):
-        url = f"https://www.sec.gov/Archives/edgar/data/{COMPANY_CIK.lstrip('0')}/{accession_number.replace('-', '')}/R{i}.htm"
+        url = f"https://www.sec.gov/Archives/edgar/data/{cik.lstrip('0')}/{accession_number.replace('-', '')}/R{i}.htm"
         response = requests.get(url=url, headers=HEADERS)
         urls.append(url)
         time.sleep(0.11)
@@ -94,60 +94,86 @@ def get_financial_statements_urls_given_accession_number(accession_number):
     return urls
 
 
-COMPANY_CIK = get_cik_from_symbol("AAPL", add_zeroes=True)
 
 
-def return_csv_data():
+
+
+def identify_statement(title):
+    """Identify the type of financial statement based on the title."""
+    title_lower = title.lower()
+    for statement, keywords in FINANCIAL_STATEMENT_KEYWORDS.items():
+        if any(keyword.lower() in title_lower for keyword in keywords):
+            return statement
+    return None
+
+
+def return_financial_data(ticker):
     """
-    RENAME THIS FUNCTION
+    Process multiple financial statements (Income Statement, Balance Sheet, Cash Flow Statement)
+    from the SEC archive and return them.
     """
-    print("cik = ", COMPANY_CIK)
+    COMPANY_CIK = get_cik_from_symbol(ticker.upper(), add_zeroes=True)
     filings = get_10k_filings(cik=COMPANY_CIK)
     
     if not filings:
         return 
     
     most_recent_10k = filings[0]
-    sections_urls = get_financial_statements_urls_given_accession_number(most_recent_10k['accessionNumber'])
+    sections_urls = get_financial_statements_urls_given_accession_number(most_recent_10k['accessionNumber'], cik=COMPANY_CIK)
 
-    print("section_urls", sections_urls)
+    financial_data = {
+        'income_statement': None,
+        'balance_sheet': None,
+        'cash_flow_statement': None
+    }
+
     i = 1
     for url in sections_urls:
-        if i != 4:
-            i += 1
-            continue
-        print("i", i, url)
         response = requests.get(url=url, headers=HEADERS)
         soup = BeautifulSoup(response.content, 'html.parser')
         
         first_table = soup.find('table')
-        print(first_table)
-        print(type(first_table))
+        title_element = first_table.find('th')
+        title = title_element.get_text(strip=True) if title_element else ""
 
-        header = first_table.find_all('th')[2:]  # Ignore the first two 'th' rows (non-relevant)
-        years = [h.text.strip() for h in header]
+        # Identify the statement based on the title
+        statement_type = identify_statement(title)
+        if statement_type:
+            print(f"Processing {statement_type} from {url}")
+            header = first_table.find_all('th')[1:]  
 
-        # Now, we extract the data rows (each financial entry)
-        rows = first_table.find_all('tr')[3:]  # Skipping the header rows
-        data = []
+            years = [h.text.strip() for h in header]
 
-        for row in rows:
-            columns = row.find_all('td')
-            if len(columns) > 1:
-                # Extract label and values for each year
-                label = columns[0].text.strip()
-                values = [col.text.strip() for col in columns[1:]]
-                data.append([label] + values)
+            # Extract the data rows (each financial entry)
+            rows = first_table.find_all('tr')[1:]  # Skipping the header rows
+            data = []
 
-        # Create a DataFrame to better structure the data
-        df = pd.DataFrame(data, columns=['Metric'] + years)
+            for row in rows:
+                columns = row.find_all('td')
+                if len(columns) > 1:
+                    # Extract label and values for each year
+                    label = columns[0].text.strip()
+                    values = [col.text.strip() for col in columns[1:]]
+                    data.append([label] + values)
 
-        # Write the extracted data to a CSV or HTML file
-        df.to_csv('financial_data.csv', index=False)
+            if "Months Ended" in years[0]:
+                years.pop(0)
+            
+            df = pd.DataFrame(data, columns=['Metric'] + years)
 
-        # Display the DataFrame
-        print(df)
+            # Store the DataFrame in the corresponding key in the dictionary
+            financial_data[statement_type] = df
+            # print(f"Extracted {statement_type} data:\n", df)
 
-        i += 1
+            # Stop once all three statements are processed
+            if all(df is not None and not df.empty for df in financial_data.values()):
+                break
 
-        return df
+    return financial_data
+
+
+if __name__ == "__main__":
+
+    financial_data = return_financial_data('aapl')
+    print(type(financial_data['income_statement']))
+    print(financial_data['income_statement'])
