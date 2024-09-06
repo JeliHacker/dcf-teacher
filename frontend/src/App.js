@@ -38,9 +38,9 @@ function App() {
   const handleStockSelect = (stockName) => {
     // Assuming that you have a way to determine the CIK and accession number based on the selected stock
     const stockDetails = {
-        'Apple': { cik: '0000320193', accessionNumber: '0000320193-21-000065' },
-        'Tesla': { cik: '0001318605', accessionNumber: '0001318605-21-000063' },
-        'Nike': { cik: '0000320187', accessionNumber: '0000320187-21-000056' },
+        'aapl': { cik: '0000320193', accessionNumber: '0000320193-21-000065', ticker : 'aapl' },
+        'tsla': { cik: '0001318605', accessionNumber: '0001318605-21-000063', ticker : 'tsla' },
+        'nke': { cik: '0000320187', accessionNumber: '0000320187-21-000056', ticker : 'nke' },
     };
 
     setSelectedStock(stockDetails[stockName]);
@@ -71,6 +71,7 @@ function App() {
             <FinancialStatements
                 cik={selectedStock.cik}
                 accessionNumber={selectedStock.accessionNumber}
+                ticker={selectedStock.ticker}
                 onComplete={completeSection}
             />
         </SectionComponent>

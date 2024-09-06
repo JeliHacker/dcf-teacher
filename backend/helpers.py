@@ -18,6 +18,7 @@ def read_csv(file_path):
 
 
 def write_to_txt(data, output_file_path):
+    print(output_file_path)
     with open(output_file_path, 'w', encoding='utf-8') as file:
         for row in data:
             file.write(', '.join(row) + '\n')  # Keeping it comma-separated for simplicity
