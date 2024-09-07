@@ -7,6 +7,8 @@ import TeacherChat from './components/TeacherChat';
 import './App.css';
 import InstructionsComponent from './components/InstructionsComponent';
 import UserSubmissionComponent from './components/UserSubmissionComponent';
+import axios from 'axios';
+import useChat from './hooks/useChat';
 
 function App() {
   const [currentSection, setCurrentSection] = useState(0);
@@ -19,6 +21,7 @@ function App() {
     { title: 'Step 5: Select Discount Rate', content: 'Select an appropriate discount rate.', unlocked: false, completed: false },
     // Add more sections as needed
   ]);
+  const { chatHistory, isLoading, userMessage, setUserMessage, sendMessage } = useChat();
 
   const completeSection = () => {
     const updatedSections = sections.map((section, index) => {
@@ -45,7 +48,11 @@ function App() {
         'nke': { cik: '0000320187', accessionNumber: '0000320187-21-000056', ticker : 'nke' },
     };
 
+    console.log("handleStockSelect");
     setSelectedStock(stockDetails[stockName]);
+    let message = `I want to analyze ${stockName}.`;
+    sendMessage(message);
+    console.log("i tried to send the message");
     completeSection();
 };
 
@@ -84,6 +91,21 @@ const onSubmitAnswers = (answers) => {
             <UserSubmissionComponent onSubmit={onSubmitAnswers} />
         </SectionComponent>
         
+      ) : currentSection === 2 && selectedStock ? (
+        <SectionComponent
+          title={sections[currentSection].title}
+          content={sections[currentSection].content}
+          onComplete={completeSection}
+          completed={sections[currentSection].completed}
+        >
+          <FinancialStatements
+            cik={selectedStock.cik}
+            accessionNumber={selectedStock.accessionNumber}
+            ticker={selectedStock.ticker}
+            onComplete={completeSection}
+          />
+          <UserSubmissionComponent onSubmit={onSubmitAnswers} />
+        </SectionComponent>
       ) : (
         <SectionComponent
           title={sections[currentSection].title}
@@ -93,9 +115,11 @@ const onSubmitAnswers = (answers) => {
         />
       )}
       <TeacherChat 
-       currentSection={currentSection}
-       sections={sections}
-       navigateToSection={navigateToSection}
+        chatHistory={chatHistory} 
+        isLoading={isLoading} 
+        userMessage={userMessage} 
+        setUserMessage={setUserMessage} 
+        sendMessage={sendMessage} 
       />
     </div>
 

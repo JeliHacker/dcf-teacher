@@ -10,20 +10,31 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
         cash_flow_statement: []
     });
 
+    // Check localStorage for existing data to avoid re-fetching
     useEffect(() => {
-        console.log("ticker", ticker);
-        // Fetch financial data from the backend API
-        axios.get(`http://localhost:8000/api/financial-data?ticker=${ticker}`)  // Adjust this to your actual API endpoint and query string
+        if (!ticker) return; // Exit early if no ticker is provided
+
+        // Check localStorage for cached data
+        const cachedData = localStorage.getItem(`financialData_${ticker}`);
+        if (cachedData) {
+            setFinancialData(JSON.parse(cachedData));
+            setLoading(false);
+            return;
+        }
+
+        // Fetch financial data if not in localStorage
+        setLoading(true);
+        axios.get(`http://localhost:8000/api/financial-data?ticker=${ticker}`)
             .then(response => {
-                console.log(response.status);
-                setFinancialData(response.data);  // Set the financial data
-                setLoading(false);  // Mark loading as false once data is loaded
+                setFinancialData(response.data);
+                localStorage.setItem(`financialData_${ticker}`, JSON.stringify(response.data)); // Cache data in localStorage
+                setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching financial data:', error);
-                setLoading(false);  // Even on error, stop showing the loading spinner
+                setLoading(false);
             });
-    }, []);  // Runs once when the component mounts
+    }, [ticker]);  // Re-fetch data every time the ticker changes
 
     // Helper function to render tables
     const renderTable = (title, data) => {
