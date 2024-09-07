@@ -5,6 +5,8 @@ import StockSelection from './components/StockSelection';
 import FinancialStatements from './components/FinancialStatements';
 import TeacherChat from './components/TeacherChat';
 import './App.css';
+import InstructionsComponent from './components/InstructionsComponent';
+import UserSubmissionComponent from './components/UserSubmissionComponent';
 
 function App() {
   const [currentSection, setCurrentSection] = useState(0);
@@ -47,6 +49,10 @@ function App() {
     completeSection();
 };
 
+const onSubmitAnswers = (answers) => {
+    console.log(answers);
+};
+
   return (
     <div className="App">
       <GuideComponent
@@ -68,13 +74,16 @@ function App() {
             onComplete={completeSection}
             completed={sections[currentSection].completed}
         >
+          <InstructionsComponent text="Gather financial data for the selected company." />
             <FinancialStatements
                 cik={selectedStock.cik}
                 accessionNumber={selectedStock.accessionNumber}
                 ticker={selectedStock.ticker}
                 onComplete={completeSection}
             />
+            <UserSubmissionComponent onSubmit={onSubmitAnswers} />
         </SectionComponent>
+        
       ) : (
         <SectionComponent
           title={sections[currentSection].title}
