@@ -1,8 +1,8 @@
 .App {
   display: flex;
   flex-direction: row;
-  padding: 20px;
   text-align: center;
+  height: 100vh;
 }
 
 
@@ -42,16 +42,59 @@
 }
 
 .guide {
-  width: 20%;
-  margin-right: 20px;
+  flex: 0 0 auto;
+  position: relative;
+  width: 25%;
 }
 
+.Panel2 {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+}
 .section {
-  width: 70%;
+  flex: 3;
+  overflow-y: auto; /* Only the middle section is scrollable */
   border: 1px solid #ddd;
   padding: 20px;
   border-radius: 5px;
   background-color: #f9f9f9;
+}
+
+.right-column {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; /* Space between chat and user input */
+  padding: 10px;
+  background-color: #f1f1f1; /* Background color for visual purposes */
+  overflow-y: hidden;
+  width: 100%; /* Full width of the right column */
+}
+
+
+.teacher-chat {
+  flex: 3;
+  overflow-y: auto; /* Allow vertical scrolling for large chat content */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  word-wrap: break-word; /* Ensure long words break instead of overflow */
+}
+
+.chat-container {
+  overflow-y: auto;
+  overflow: scroll;
+  height: 100%;
+}
+
+.chat-history {
+  overflow: scroll;
+}
+
+.separator {
+  width: 100%;
+  background-color: red;
+  border: 1px solid black;
 }
 
 button {
@@ -96,9 +139,4 @@ button:disabled {
   margin-top: 10px;
   font-size: 16px;
   font-weight: bold;
-}
-
-.chat-container {
-  height: 50vh;
-  overflow: scroll;
 }

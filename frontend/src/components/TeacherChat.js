@@ -4,13 +4,13 @@ import useChat from '../hooks/useChat';
 
 function TeacherChat({ chatHistory, isLoading, userMessage, setUserMessage, sendMessage }) {
   const handleSendMessage = () => {
-      sendMessage(userMessage); // Use the sendMessage function from the custom hook
+    sendMessage(userMessage); // Use the sendMessage function from the custom hook
   };
 
 
   return (
-    <div className="guide">
-      <h2>Chat</h2>
+    <div className="teacher-chat">
+      <h2>DCF Teacher</h2>
       <div className="chat-container">
         <div className="chat-history">
           {chatHistory.map((msg, index) => (

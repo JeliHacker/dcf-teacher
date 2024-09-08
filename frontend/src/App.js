@@ -43,9 +43,9 @@ function App() {
   const handleStockSelect = (stockName) => {
     // Assuming that you have a way to determine the CIK and accession number based on the selected stock
     const stockDetails = {
-        'aapl': { cik: '0000320193', accessionNumber: '0000320193-21-000065', ticker : 'aapl' },
-        'tsla': { cik: '0001318605', accessionNumber: '0001318605-21-000063', ticker : 'tsla' },
-        'nke': { cik: '0000320187', accessionNumber: '0000320187-21-000056', ticker : 'nke' },
+      'aapl': { cik: '0000320193', accessionNumber: '0000320193-21-000065', ticker: 'aapl' },
+      'tsla': { cik: '0001318605', accessionNumber: '0001318605-21-000063', ticker: 'tsla' },
+      'nke': { cik: '0000320187', accessionNumber: '0000320187-21-000056', ticker: 'nke' },
     };
 
     console.log("handleStockSelect");
@@ -54,11 +54,11 @@ function App() {
     sendMessage(message);
     console.log("i tried to send the message");
     completeSection();
-};
+  };
 
-const onSubmitAnswers = (answers) => {
+  const onSubmitAnswers = (answers) => {
     console.log(answers);
-};
+  };
 
   return (
     <div className="App">
@@ -67,60 +67,66 @@ const onSubmitAnswers = (answers) => {
         sections={sections}
         navigateToSection={navigateToSection}
       />
-      {currentSection === 0 ? (
-        <SectionComponent
-          title={sections[currentSection].title}
-          onComplete={completeSection}
-          completed={sections[currentSection].completed}
-        >
-          <StockSelection onSelectStock={handleStockSelect} />
-        </SectionComponent>
-      ) : currentSection === 1 && selectedStock ? (
-        <SectionComponent
+      <div className="Panel2">
+        {currentSection === 0 ? (
+          <SectionComponent
             title={sections[currentSection].title}
             onComplete={completeSection}
             completed={sections[currentSection].completed}
-        >
-          <InstructionsComponent text="Gather financial data for the selected company." />
+          >
+            <StockSelection onSelectStock={handleStockSelect} />
+          </SectionComponent>
+        ) : currentSection === 1 && selectedStock ? (
+          <SectionComponent
+            title={sections[currentSection].title}
+            onComplete={completeSection}
+            completed={sections[currentSection].completed}
+          >
+            <InstructionsComponent text="Gather financial data for the selected company." />
             <FinancialStatements
-                cik={selectedStock.cik}
-                accessionNumber={selectedStock.accessionNumber}
-                ticker={selectedStock.ticker}
-                onComplete={completeSection}
+              cik={selectedStock.cik}
+              accessionNumber={selectedStock.accessionNumber}
+              ticker={selectedStock.ticker}
+              onComplete={completeSection}
+            />
+
+          </SectionComponent>
+
+        ) : currentSection === 2 && selectedStock ? (
+          <SectionComponent
+            title={sections[currentSection].title}
+            content={sections[currentSection].content}
+            onComplete={completeSection}
+            completed={sections[currentSection].completed}
+          >
+            <FinancialStatements
+              cik={selectedStock.cik}
+              accessionNumber={selectedStock.accessionNumber}
+              ticker={selectedStock.ticker}
+              onComplete={completeSection}
             />
             <UserSubmissionComponent onSubmit={onSubmitAnswers} />
-        </SectionComponent>
-        
-      ) : currentSection === 2 && selectedStock ? (
-        <SectionComponent
-          title={sections[currentSection].title}
-          content={sections[currentSection].content}
-          onComplete={completeSection}
-          completed={sections[currentSection].completed}
-        >
-          <FinancialStatements
-            cik={selectedStock.cik}
-            accessionNumber={selectedStock.accessionNumber}
-            ticker={selectedStock.ticker}
+          </SectionComponent>
+        ) : (
+          <SectionComponent
+            title={sections[currentSection].title}
+            content={sections[currentSection].content}
             onComplete={completeSection}
+            completed={sections[currentSection].completed}
           />
+        )}
+        <div className='right-column'>
+          <TeacherChat
+            chatHistory={chatHistory}
+            isLoading={isLoading}
+            userMessage={userMessage}
+            setUserMessage={setUserMessage}
+            sendMessage={sendMessage}
+          />
+          <hr class="separator" />
           <UserSubmissionComponent onSubmit={onSubmitAnswers} />
-        </SectionComponent>
-      ) : (
-        <SectionComponent
-          title={sections[currentSection].title}
-          content={sections[currentSection].content}
-          onComplete={completeSection}
-          completed={sections[currentSection].completed}
-        />
-      )}
-      <TeacherChat 
-        chatHistory={chatHistory} 
-        isLoading={isLoading} 
-        userMessage={userMessage} 
-        setUserMessage={setUserMessage} 
-        sendMessage={sendMessage} 
-      />
+        </div>
+      </div>
     </div>
 
   );

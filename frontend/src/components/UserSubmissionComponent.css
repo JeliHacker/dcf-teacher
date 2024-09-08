@@ -1,7 +1,15 @@
 .user-input-section {
-	position: absolute;
-	right: 10px;
-	bottom: 50px;
 	display: flex;
+	flex: 1;
 	flex-direction: column;
+	justify-content: space-evenly;
 }
+
+@keyframes glow {
+	from {
+	  box-shadow: 0 0 15px - 15px #aef4af;
+	}
+	to {
+	  box-shadow: 0 0 15px 15px #aef4af;
+	}
+  }
