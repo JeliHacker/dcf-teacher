@@ -1,39 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import useChat from '../hooks/useChat';
 
-function TeacherChat({ currentSection, sections, navigateToSection }) {
-    const [chatHistory, setChatHistory] = useState([]);
-    const [userMessage, setUserMessage] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+function TeacherChat({ chatHistory, isLoading, userMessage, setUserMessage, sendMessage }) {
+  const handleSendMessage = () => {
+      sendMessage(userMessage); // Use the sendMessage function from the custom hook
+  };
 
-    const handleSendMessage = async () => {
-        if (userMessage.trim() === '') return;
-    
-        // Add user's message to the chat history
-        const newMessage = { sender: 'user', text: userMessage };
-        setChatHistory([...chatHistory, newMessage]);
-    
-        setIsLoading(true);
-    
-        try {
-            // Make request to your Flask API instead of Gemini directly
-            const response = await axios.post('http://localhost:8000/api/ask', { prompt: userMessage });
-            console.log("response!")
-            console.log(typeof(response));
-            console.log(response);
-
-        
-            const botResponse = { sender: 'bot', text: response.data };
-            setChatHistory([...chatHistory, newMessage, botResponse]);
-        } catch (error) {
-            console.error('Error fetching response from Gemini API:', error);
-            setChatHistory([...chatHistory, newMessage, { sender: 'bot', text: `Error fetching response. ${JSON.stringify(error)} ${error.message} ${error.response}` }]);
-        } finally {
-            setIsLoading(false);
-            setUserMessage('');
-        }
-      };
-    
 
   return (
     <div className="guide">
