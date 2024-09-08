@@ -56,7 +56,7 @@ def get_10k_filings(cik):
     # Fetch the company's submissions
     submissions_url = f"https://data.sec.gov/submissions/CIK{cik}.json"
     response = requests.get(submissions_url, headers=HEADERS)
-    time.sleep(0.1)
+    time.sleep(0.11)
     data = response.json()
     filings = data['filings']['recent']
 
@@ -101,6 +101,8 @@ def get_financial_statements_urls_given_accession_number(accession_number, cik):
 def identify_statement(title):
     """Identify the type of financial statement based on the title."""
     title_lower = title.lower()
+    if ('parenthetical' in title_lower):
+        return None
     for statement, keywords in FINANCIAL_STATEMENT_KEYWORDS.items():
         if any(keyword.lower() in title_lower for keyword in keywords):
             return statement
@@ -175,5 +177,3 @@ def return_financial_data(ticker):
 if __name__ == "__main__":
 
     financial_data = return_financial_data('aapl')
-    print(type(financial_data['income_statement']))
-    print(financial_data['income_statement'])
