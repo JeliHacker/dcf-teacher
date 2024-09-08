@@ -9,14 +9,14 @@
     API_KEY="fiqmD31Ficirm5$jdoaW"
     USER_AGENT="ilovetolearn@gmail.com"
     ```
-5. Download and setup[Poetry](https://python-poetry.org): 
-`curl -sSL https://install.python-poetry.org | python3 -`
-Setup Poetry env: `poetry env use python3.12`
-`poetry install` installs the packages from pyproject.toml
-Activate poetry virtual environment using: `poetry shell`
+5. Download [Poetry](https://python-poetry.org):  `curl -sSL https://install.python-poetry.org | python3 -`
+6. Setup Poetry env: `poetry env use python3.12`
+7. `poetry install` installs the packages from pyproject.toml
+8. Activate poetry virtual environment using: `poetry shell`
+
 Contact @I-Johnson if you face any issues
 
-6. You're all set! Look at the [issues](https://github.com/JeliHacker/dcf-teacher-afrotech/issues) tab or read the rest of the README to find something to work on, open a PR and describe your changes. 
+9. You're all set! Look at the [issues](https://github.com/JeliHacker/dcf-teacher-afrotech/issues) tab or read the rest of the README to find something to work on, open a PR and describe your changes. 
 ## Next Steps
 - display 3 financial statements in sections 2: Balance Sheet, Income Statement, Statement of Cash Flows
 - add answer submission box for user to type numbers. Evaluate answers, require correct answer before user can move on.
