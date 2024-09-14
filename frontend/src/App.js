@@ -125,7 +125,7 @@ function App() {
           setUserMessage={setUserMessage}
           sendMessage={sendMessage}
         />
-        <hr class="separator" />
+        <hr className="separator" />
         <UserSubmissionComponent currentSection={currentSection} sections={sections} onSubmit={onSubmitAnswers} />
       </div>
     </div>

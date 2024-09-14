@@ -76,6 +76,19 @@ def generate_question():
     
     return response.text
 
+@app.route('/api/submit_answer', methods=['POST'])
+def submit_answer():
+    print("Received request at /api/submit_answer")
+    original_question = request.json.get('question')
+    user_answer = request.json.get('answer')
+    
+    prompt = f"You just asked me a multiple choice question: {original_question}. My answer was '{user_answer}'. In a few sentences, evaluate my answer. Keep in mind that my answer might be incorrect. Tell me if I'm wrong."
+    response = model.generate_content(prompt)
+    print(f"Generated response: {response}")
+    print(f"type(response): {type(response)}")
+    
+    return response.text
+
 
 if __name__ == "__main__":
     app.run(debug=True)

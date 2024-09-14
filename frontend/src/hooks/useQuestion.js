@@ -22,13 +22,13 @@ function useQuestion() {
         }
     };
 
-    const submitAnswer = async (answer) => {
+    const submitAnswer = async (question, answer) => {
+        console.log("Submit Answer", question, answer);
         setIsEvaluating(true);
         try {
-            const response = await axios.post('http://localhost:8000/api/submit_answer', { answer });
-            const evaluation = await axios.get('http://localhost:8000/api/evaluate_answer');
+            const response = await axios.post('http://localhost:8000/api/submit_answer', { question, answer });
 
-            setEvaluationResult(evaluation.data.result);
+            setEvaluationResult(response.data);
         } catch (error) {
             console.error('Error submitting or evaluating answer:', error);
         } finally {

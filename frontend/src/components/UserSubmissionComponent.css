@@ -3,6 +3,7 @@
 	flex: 1;
 	flex-direction: column;
 	justify-content: space-evenly;
+	overflow-y: auto;
 }
 
 @keyframes glow {
@@ -13,6 +14,13 @@
 	to {
 		box-shadow: 0 0 15px 15px #aef4af;
 	}
+}
+
+
+.highlight {
+	background-color: green !important;
+	color: white;
+	border: 2px solid black;
 }
 
 .choice-buttons button {
@@ -29,7 +37,5 @@
 
 .choice-buttons button:hover {
 	background-color: green;
-	/* Turn green on hover */
 	color: white;
-	/* Optional: change text color to white */
 }

@@ -18,19 +18,23 @@ function UserInputComponent({ currentSection, onSubmit }) {
     if (currentSection === 0) {
       setTopic('discounted cash flow valuation');
     }
-    await generateQuestion('discounted cash flow valuation');
+    await generateQuestion('balance sheet in financial statements');
   };
 
   // Handle answer submission
   const handleAnswerSubmit = () => {
     if (selectedAnswer) {
-      submitAnswer(selectedAnswer); // Submit the selected answer to backend
+      submitAnswer(questionData, selectedAnswer); // Submit the selected answer to backend
     }
   };
 
   // Handle selecting an answer (A, B, C, or D)
-  const handleSelectAnswer = (answer) => {
-    setSelectedAnswer(answer);
+  const handleSelectAnswer = async (answer) => {
+    await setSelectedAnswer(answer);
+    console.log('Selected answer:', selectedAnswer);
+    if (answer) {
+      submitAnswer(questionData, answer); // Submit the selected answer to backend
+    }
   };
 
   const handleFocus = () => {
@@ -56,19 +60,16 @@ function UserInputComponent({ currentSection, onSubmit }) {
                 <ReactMarkdown>{questionData}</ReactMarkdown>
               </div>
 
-              <div class="choice-buttons">
-                <button>A</button>
-                <button>B</button>
-                <button>C</button>
-                <button>D</button>
+              <div className="choice-buttons">
+                <button onClick={() => handleSelectAnswer('A')}
+                  className={selectedAnswer === 'A' ? 'highlight' : ''}>A</button>
+                <button onClick={() => handleSelectAnswer('B')}
+                  className={selectedAnswer === 'B' ? 'highlight' : ''}>B</button>
+                <button onClick={() => handleSelectAnswer('C')}
+                  className={selectedAnswer === 'C' ? 'highlight' : ''}>C</button>
+                <button onClick={() => handleSelectAnswer('D')}
+                  className={selectedAnswer === 'D' ? 'highlight' : ''}>D</button>
               </div>
-
-              <button
-                onClick={handleAnswerSubmit}
-                disabled={!selectedAnswer || isEvaluating}
-              >
-                {isEvaluating ? 'Submitting...' : 'Submit Answer'}
-              </button>
             </>
           )}
 
@@ -76,7 +77,7 @@ function UserInputComponent({ currentSection, onSubmit }) {
           {evaluationResult && (
             <div>
               <h3>Result:</h3>
-              <p>{evaluationResult}</p>
+              <ReactMarkdown>{evaluationResult}</ReactMarkdown>
             </div>
           )}
         </>
