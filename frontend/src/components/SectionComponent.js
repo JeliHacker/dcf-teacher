@@ -5,10 +5,6 @@ function SectionComponent({ title, children, onComplete, completed }) {
     <div className="section">
       <h2>{title}</h2>
       {children}
-      {!completed && (
-        <button onClick={onComplete}>Complete Section</button>
-      )}
-      {completed && <p>Section Completed!</p>}
     </div>
   );
 }

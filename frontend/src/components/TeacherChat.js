@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import useChat from '../hooks/useChat';
+import ReactMarkdown from 'react-markdown';
 
 function TeacherChat({ chatHistory, isLoading, userMessage, setUserMessage, sendMessage }) {
   const handleSendMessage = () => {
@@ -15,7 +14,7 @@ function TeacherChat({ chatHistory, isLoading, userMessage, setUserMessage, send
         <div className="chat-history">
           {chatHistory.map((msg, index) => (
             <div key={index} className={`chat-message ${msg.sender}`}>
-              <strong>{msg.sender === 'user' ? 'You' : 'Bot'}: </strong>{msg.text}
+              <strong>{msg.sender === 'user' ? 'You' : 'Bot'}: </strong><ReactMarkdown>{msg.text}</ReactMarkdown>
             </div>
           ))}
         </div>

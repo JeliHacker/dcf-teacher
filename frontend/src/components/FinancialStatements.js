@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Button, ButtonGroup } from '@chakra-ui/react'
 
 function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
     const [loading, setLoading] = useState(true);
@@ -88,15 +89,15 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
               
               {/* Buttons to switch between statements */}
               <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
-                <button onClick={() => setSelectedStatement('Balance Sheet')} style={{ fontWeight: selectedStatement === 'Balance Sheet' ? 'bold' : 'normal' }}>
+                <Button onClick={() => setSelectedStatement('Balance Sheet')} style={{ fontWeight: selectedStatement === 'Balance Sheet' ? 'bold' : 'normal' }}>
                   Balance Sheet
-                </button>
-                <button onClick={() => setSelectedStatement('Statement of Cash Flows')} style={{ fontWeight: selectedStatement === 'Statement of Cash Flows' ? 'bold' : 'normal' }}>
+                </Button>
+                <Button onClick={() => setSelectedStatement('Statement of Cash Flows')} style={{ fontWeight: selectedStatement === 'Statement of Cash Flows' ? 'bold' : 'normal' }}>
                   Statement of Cash Flows
-                </button>
-                <button onClick={() => setSelectedStatement('Income Statement')} style={{ fontWeight: selectedStatement === 'Income Statement' ? 'bold' : 'normal' }}>
+                </Button>
+                <Button onClick={() => setSelectedStatement('Income Statement')} style={{ fontWeight: selectedStatement === 'Income Statement' ? 'bold' : 'normal' }}>
                   Income Statement
-                </button>
+                </Button>
               </div>
     
               {/* Conditionally render the selected financial statement */}
@@ -106,9 +107,9 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
             </>
           )}
           
-          <button onClick={onComplete} style={{ marginTop: '20px' }}>
+          <Button onClick={onComplete} style={{ marginTop: '20px' }}>
             Complete Step 2!
-          </button>
+          </Button>
         </div>
       );
 }
