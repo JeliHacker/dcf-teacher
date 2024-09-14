@@ -44,14 +44,25 @@
 .guide {
   flex: 0 0 auto;
   position: relative;
-  width: 25%;
+  width: 20%;
+}
+
+.guide ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.guide button {
+  width: 100%;
+  text-align: left;
 }
 
 .Panel2 {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-grow: 1;
 }
+
 .section {
   flex: 3;
   overflow-y: auto; /* Only the middle section is scrollable */
@@ -63,19 +74,19 @@
 
 .right-column {
   display: flex;
-  flex: 1;
   flex-direction: column;
   align-items: center;
   justify-content: space-between; /* Space between chat and user input */
   padding: 10px;
   background-color: #f1f1f1; /* Background color for visual purposes */
   overflow-y: hidden;
-  width: 100%; /* Full width of the right column */
+  width: 20%; /* Full width of the right column */
+  height: 100%;
 }
 
 
 .teacher-chat {
-  flex: 3;
+  flex: 1;
   overflow-y: auto; /* Allow vertical scrolling for large chat content */
   overflow-x: hidden; /* Prevent horizontal scrolling */
   word-wrap: break-word; /* Ensure long words break instead of overflow */

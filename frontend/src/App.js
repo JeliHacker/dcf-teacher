@@ -68,6 +68,7 @@ function App() {
         navigateToSection={navigateToSection}
       />
       <div className="Panel2">
+
         {currentSection === 0 ? (
           <SectionComponent
             title={sections[currentSection].title}
@@ -99,13 +100,13 @@ function App() {
             onComplete={completeSection}
             completed={sections[currentSection].completed}
           >
+            <InstructionsComponent text="Now, get the operating cash flows and the capital expenditures for each of the past 10 years." />
             <FinancialStatements
               cik={selectedStock.cik}
               accessionNumber={selectedStock.accessionNumber}
               ticker={selectedStock.ticker}
               onComplete={completeSection}
             />
-            <UserSubmissionComponent onSubmit={onSubmitAnswers} />
           </SectionComponent>
         ) : (
           <SectionComponent
@@ -115,17 +116,17 @@ function App() {
             completed={sections[currentSection].completed}
           />
         )}
-        <div className='right-column'>
-          <TeacherChat
-            chatHistory={chatHistory}
-            isLoading={isLoading}
-            userMessage={userMessage}
-            setUserMessage={setUserMessage}
-            sendMessage={sendMessage}
-          />
-          <hr class="separator" />
-          <UserSubmissionComponent onSubmit={onSubmitAnswers} />
-        </div>
+      </div>
+      <div className='right-column'>
+        <TeacherChat
+          chatHistory={chatHistory}
+          isLoading={isLoading}
+          userMessage={userMessage}
+          setUserMessage={setUserMessage}
+          sendMessage={sendMessage}
+        />
+        <hr className="separator" />
+        <UserSubmissionComponent currentSection={currentSection} sections={sections} onSubmit={onSubmitAnswers} />
       </div>
     </div>
 
