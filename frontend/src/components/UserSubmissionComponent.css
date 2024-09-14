@@ -7,9 +7,29 @@
 
 @keyframes glow {
 	from {
-	  box-shadow: 0 0 15px - 15px #aef4af;
+		box-shadow: 0 0 15px - 15px #aef4af;
 	}
+
 	to {
-	  box-shadow: 0 0 15px 15px #aef4af;
+		box-shadow: 0 0 15px 15px #aef4af;
 	}
-  }
+}
+
+.choice-buttons button {
+	background-color: #ccc;
+	/* Nondescript background color */
+	border: none;
+	padding: 10px 20px;
+	margin: 5px;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 5px;
+	transition: all 0.3s ease;
+}
+
+.choice-buttons button:hover {
+	background-color: green;
+	/* Turn green on hover */
+	color: white;
+	/* Optional: change text color to white */
+}
