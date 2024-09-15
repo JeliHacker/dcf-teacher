@@ -110,6 +110,21 @@ function App() {
                 onComplete={completeSection}
               />
             </SectionComponent>
+          ) : currentSection === 3 && selectedStock ? (
+            <SectionComponent
+              title={'poop'}
+              content={sections[currentSection].content}
+              onComplete={completeSection}
+              completed={sections[currentSection].completed}
+            >
+              <InstructionsComponent text="Now, get the operating cash flows and the capital expenditures for each of the past 10 years." />
+              <FinancialStatements
+                cik={selectedStock.cik}
+                accessionNumber={selectedStock.accessionNumber}
+                ticker={selectedStock.ticker}
+                onComplete={completeSection}
+              />
+            </SectionComponent>
           ) : (
             <SectionComponent
               title={sections[currentSection].title}

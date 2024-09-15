@@ -9,7 +9,6 @@ function TeacherChat({ chatHistory, isLoading, userMessage, setUserMessage, send
 
   return (
     <div className="teacher-chat">
-      <h2>DCF Teacher</h2>
       <div className="chat-container">
         <div className="chat-history">
           {chatHistory.map((msg, index) => (
