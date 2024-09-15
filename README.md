@@ -1,7 +1,7 @@
 # DCF Teacher
 **An interactive tutorial to learn financial modeling**
 ## AfroTech AI Hackathon 2024
-https://newprairiepress.org/cgi/viewcontent.cgi?article=1127&context=jft#:~:text=The%20financial%20survey%20revealed%20the,sample%20indicate%20that%20those%20with
+We were inspired by [this](https://newprairiepress.org/cgi/viewcontent.cgi?article=1127&context=jft#:~:text=The%20financial%20survey%20revealed%20the,sample%20indicate%20that%20those%20with) study on investment behavior among different demographics.
 
 The median wealth for caucasian households was ~$110,000 whereas for black households it was ~$7,000. However, white people's incomes are less than 2x that of black people's, so income alone doesn't explain the wealth disparity. What does explain the disparity is that black people are much less likely to be invested in the stock market.
 
@@ -17,18 +17,18 @@ part of a holistic solution must include financial education."
 
 
 ## How to Contribute
-1. Clone the project with `git clone https://github.com/JeliHacker/dcf-teacher-afrotech.git`
-2. Install the dependencies with `npm install`
-3. Create a `.env` file in the `/backend` folder. You can use this command: `touch /backend/.env`.
+1. Clone the project with `git clone https://github.com/JeliHacker/dcf-teacher-afrotech.git`. Then, navigate into the project: `cd dcf-teacher-afrotech`.
+2. Install the dependencies in the `frontend` folder with `cd frontend && npm install`.
+3. Create a `.env` file in the `/backend` folder. On macOS/Linux: `touch /backend/.env` On Windows: `New-Item -Path backend\.env -ItemType File`.
 4. You need two environment variables: `API_KEY` and `USER_AGENT`. For the `API_KEY`, you can get a Gemini key from [the docs](https://ai.google.dev/gemini-api/docs/api-key). For `USER_AGENT`, put in an email address. 
     Example .env file:
     ```
-    API_KEY="fiqmD31Ficirm5$jdoaW"
-    USER_AGENT="ilovetolearn@gmail.com"
+    API_KEY="your-gemini-api-key-here"
+    USER_AGENT="your-email@example.com"
     ```
-5. Download [Poetry](https://python-poetry.org):  `curl -sSL https://install.python-poetry.org | python3 -`
-6. Setup Poetry env: `poetry env use python3.12`
-7. `poetry install` installs the packages from pyproject.toml
+5. Download [Poetry](https://python-poetry.org). On macOS/Linux:  `curl -sSL https://install.python-poetry.org | python3 -`. On Windows: `(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -`.
+6. Setup Poetry env: `poetry env use python3.12`. Make sure Python 3.12 is installed on your system. You can check this by running `python --version`.
+7. Install the Python dependencies with `poetry install`.
 8. Activate poetry virtual environment using: `poetry shell`
 
 Contact @I-Johnson if you face any issues
