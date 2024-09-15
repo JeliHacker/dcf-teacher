@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Button, ButtonGroup, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 
 function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
     const [loading, setLoading] = useState(true);
@@ -45,10 +46,9 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
             const yearB = new Date(b).getFullYear();
             return yearB - yearA;
         });
-    
+
         return (
             <div>
-                <h3>{title}</h3>
                 {data && data.length > 0 ? (
                     <table border="1" style={{ width: '100%', textAlign: 'left' }}>
                         <thead>
@@ -80,37 +80,37 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
     // Render the tables only after the data is loaded
     return (
         <div style={{ position: 'relative', height: '80vh', width: '100%' }}>
-          {loading ? (
-            <div>Loading...</div>
-          ) : (
-            <>
-              <h1>Financial Statements for {ticker.toUpperCase()}</h1>
-              
-              {/* Buttons to switch between statements */}
-              <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
-                <button onClick={() => setSelectedStatement('Balance Sheet')} style={{ fontWeight: selectedStatement === 'Balance Sheet' ? 'bold' : 'normal' }}>
-                  Balance Sheet
-                </button>
-                <button onClick={() => setSelectedStatement('Statement of Cash Flows')} style={{ fontWeight: selectedStatement === 'Statement of Cash Flows' ? 'bold' : 'normal' }}>
-                  Statement of Cash Flows
-                </button>
-                <button onClick={() => setSelectedStatement('Income Statement')} style={{ fontWeight: selectedStatement === 'Income Statement' ? 'bold' : 'normal' }}>
-                  Income Statement
-                </button>
-              </div>
-    
-              {/* Conditionally render the selected financial statement */}
-              {selectedStatement === 'Balance Sheet' && renderTable('Balance Sheet', financialData.balance_sheet)}
-              {selectedStatement === 'Statement of Cash Flows' && renderTable('Cash Flow Statement', financialData.cash_flow_statement)}
-              {selectedStatement === 'Income Statement' && renderTable('Income Statement', financialData.income_statement)}
-            </>
-          )}
-          
-          <button onClick={onComplete} style={{ marginTop: '20px' }}>
-            Complete Step 2!
-          </button>
+            {loading ? (
+                <div>Loading...</div>
+            ) : (
+                <>
+                    <h1>Financial Statements for {ticker.toUpperCase()}</h1>
+
+                    {/* Buttons to switch between statements */}
+                    <Tabs isFitted variant='enclosed' style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
+                        <Tab onClick={() => setSelectedStatement('Balance Sheet')} style={{ fontWeight: selectedStatement === 'Balance Sheet' ? 'bold' : 'normal' }}>
+                            Balance Sheet
+                        </Tab>
+                        <Tab onClick={() => setSelectedStatement('Statement of Cash Flows')} style={{ fontWeight: selectedStatement === 'Statement of Cash Flows' ? 'bold' : 'normal' }}>
+                            Statement of Cash Flows
+                        </Tab>
+                        <Tab onClick={() => setSelectedStatement('Income Statement')} style={{ fontWeight: selectedStatement === 'Income Statement' ? 'bold' : 'normal' }}>
+                            Income Statement
+                        </Tab>
+                    </Tabs>
+
+                    {/* Conditionally render the selected financial statement */}
+                    {selectedStatement === 'Balance Sheet' && renderTable('Balance Sheet', financialData.balance_sheet)}
+                    {selectedStatement === 'Statement of Cash Flows' && renderTable('Cash Flow Statement', financialData.cash_flow_statement)}
+                    {selectedStatement === 'Income Statement' && renderTable('Income Statement', financialData.income_statement)}
+                </>
+            )}
+
+            <Button onClick={onComplete} style={{ marginTop: '20px' }}>
+                Complete Step 2!
+            </Button>
         </div>
-      );
+    );
 }
 
 export default FinancialStatements;
