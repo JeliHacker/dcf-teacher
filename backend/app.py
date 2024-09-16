@@ -28,6 +28,7 @@ def test_route():
 
 @app.route('/api/financial-data', methods=['GET'])
 def get_financial_data():
+    print("Received request at /api/financial-data")
     # Get the stock ticker from the query parameter (e.g., /api/financial-data?ticker=aapl)
     stock_ticker = request.args.get('ticker')
 
