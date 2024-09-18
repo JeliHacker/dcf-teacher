@@ -41,6 +41,10 @@
   }
 }
 
+h2 {
+  font-size: xx-large;
+}
+
 .guide {
   flex: 0 0 auto;
   position: relative;
@@ -115,7 +119,6 @@
 
 .chat-history {
   flex: 1;
-  border: 1px solid #ccc; 
   overflow: scroll;
 }
 
