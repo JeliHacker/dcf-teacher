@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, ButtonGroup, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+import { Button, Tabs, Tab } from '@chakra-ui/react'
 
 function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
     const [loading, setLoading] = useState(true);
@@ -10,6 +10,8 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
         balance_sheet: [],
         cash_flow_statement: []
     });
+
+
 
     // Check localStorage for existing data to avoid re-fetching
     useEffect(() => {
@@ -23,9 +25,11 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
             return;
         }
 
+        const apiUrl = process.env.REACT_APP_API_URL;
+
         // Fetch financial data if not in localStorage
         setLoading(true);
-        axios.get(`http://localhost:8000/api/financial-data?ticker=${ticker}`)
+        axios.get(`${apiUrl}/api/financial-data?ticker=${ticker}`)
             .then(response => {
                 setFinancialData(response.data);
                 localStorage.setItem(`financialData_${ticker}`, JSON.stringify(response.data)); // Cache data in localStorage
@@ -87,14 +91,54 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
                     <h1>Financial Statements for {ticker.toUpperCase()}</h1>
 
                     {/* Buttons to switch between statements */}
-                    <Tabs isFitted variant='enclosed' style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
-                        <Tab onClick={() => setSelectedStatement('Balance Sheet')} style={{ fontWeight: selectedStatement === 'Balance Sheet' ? 'bold' : 'normal' }}>
+                    <Tabs
+                        isFitted
+                        variant="enclosed"
+                        style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}
+                    >
+                        <Tab
+                            onClick={() => setSelectedStatement('Balance Sheet')}
+                            style={{
+                                fontWeight: selectedStatement === 'Balance Sheet' ? 'bold' : 'normal',
+                                backgroundColor: selectedStatement === 'Balance Sheet' ? '#EDF2F7' : 'white',
+                                border: '1px solid #CBD5E0',
+                                padding: '10px 20px',
+                                cursor: 'pointer',
+                                borderRadius: '5px',
+                                transition: 'background-color 0.2s ease',
+                            }}
+                            _hover={{ backgroundColor: '#E2E8F0' }} // Hover effect
+                        >
                             Balance Sheet
                         </Tab>
-                        <Tab onClick={() => setSelectedStatement('Statement of Cash Flows')} style={{ fontWeight: selectedStatement === 'Statement of Cash Flows' ? 'bold' : 'normal' }}>
+                        <Tab
+                            onClick={() => setSelectedStatement('Statement of Cash Flows')}
+                            style={{
+                                fontWeight: selectedStatement === 'Statement of Cash Flows' ? 'bold' : 'normal',
+                                backgroundColor: selectedStatement === 'Statement of Cash Flows' ? '#EDF2F7' : 'white',
+                                border: '1px solid #CBD5E0',
+                                padding: '10px 20px',
+                                cursor: 'pointer',
+                                borderRadius: '5px',
+                                transition: 'background-color 0.2s ease',
+                            }}
+                            _hover={{ backgroundColor: '#E2E8F0' }} // Hover effect
+                        >
                             Statement of Cash Flows
                         </Tab>
-                        <Tab onClick={() => setSelectedStatement('Income Statement')} style={{ fontWeight: selectedStatement === 'Income Statement' ? 'bold' : 'normal' }}>
+                        <Tab
+                            onClick={() => setSelectedStatement('Income Statement')}
+                            style={{
+                                fontWeight: selectedStatement === 'Income Statement' ? 'bold' : 'normal',
+                                backgroundColor: selectedStatement === 'Income Statement' ? '#EDF2F7' : 'white',
+                                border: '1px solid #CBD5E0',
+                                padding: '10px 20px',
+                                cursor: 'pointer',
+                                borderRadius: '5px',
+                                transition: 'background-color 0.2s ease',
+                            }}
+                            _hover={{ backgroundColor: '#E2E8F0' }} // Hover effect
+                        >
                             Income Statement
                         </Tab>
                     </Tabs>

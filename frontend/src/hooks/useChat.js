@@ -11,10 +11,11 @@ function useChat() {
         if (message.trim() === '') return;
 
         setIsLoading(true);
+        const apiUrl = process.env.REACT_APP_API_URL;
 
         try {
             // Make request to your Flask API instead of Gemini directly
-            const response = await axios.post('http://localhost:8000/api/ask', { prompt: message });
+            const response = await axios.post(`${apiUrl}/api/ask`, { prompt: message });
 
             // Add both user's message and bot's response to the chat history at once
             const newMessage = { sender: 'user', text: message };

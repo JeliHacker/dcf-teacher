@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
 function TeacherChat({ chatHistory, isLoading, userMessage, setUserMessage, sendMessage }) {
