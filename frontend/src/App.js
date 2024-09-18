@@ -112,7 +112,7 @@ function App() {
             </SectionComponent>
           ) : currentSection === 3 && selectedStock ? (
             <SectionComponent
-              title={'poop'}
+              title={sections[currentSection].title}
               content={sections[currentSection].content}
               onComplete={completeSection}
               completed={sections[currentSection].completed}

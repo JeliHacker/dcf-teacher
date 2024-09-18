@@ -7,11 +7,13 @@ function useQuestion() {
     const [questionData, setQuestionData] = useState(null);
     const [evaluationResult, setEvaluationResult] = useState(null);
 
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     // Function to generate a question
     const generateQuestion = async (topic) => {
         setIsLoading(true);
         try {
-            const response = await axios.post('http://localhost:8000/api/generate_question', { prompt: topic });
+            const response = await axios.post(`${apiUrl}/api/generate_question`, { prompt: topic });
             
             // Assuming the response contains the question and possible answers
             setQuestionData(response.data);
@@ -26,7 +28,7 @@ function useQuestion() {
         console.log("Submit Answer", question, answer);
         setIsEvaluating(true);
         try {
-            const response = await axios.post('http://localhost:8000/api/submit_answer', { question, answer });
+            const response = await axios.post(`${apiUrl}/api/submit_answer`, { question, answer });
 
             setEvaluationResult(response.data);
         } catch (error) {
