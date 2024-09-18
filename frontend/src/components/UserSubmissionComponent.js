@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './UserSubmissionComponent.css';
 import useQuestion from '../hooks/useQuestion';
 import ReactMarkdown from 'react-markdown';
+import { Button } from '@chakra-ui/react';
 
 function UserInputComponent({ currentSection, onSubmit }) {
   const [hasFocused, setHasFocused] = useState(false);
@@ -47,9 +48,14 @@ function UserInputComponent({ currentSection, onSubmit }) {
         <>
           <div>
             <h3>Click below to generate a question:</h3>
-            <button onClick={handleGenerateQuestion} disabled={isLoading}>
+            <Button
+              onClick={handleGenerateQuestion}
+              disabled={isLoading}
+              fontWeight={'normal'}
+              colorScheme={'blue'}
+            >
               {isLoading ? 'Generating...' : 'Generate Question'}
-            </button>
+            </Button>
           </div>
 
           {/* Display the generated question */}

@@ -164,36 +164,3 @@ button:disabled {
   cursor: not-allowed;
   background-color: #ccc;
 }
-
-.stock-selection {
-  text-align: center;
-}
-
-.stocks {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-.stock {
-  cursor: pointer;
-  text-align: center;
-}
-
-.stock-logo {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: 2px solid #ccc;
-  transition: border-color 0.3s ease;
-}
-
-.stock:hover .stock-logo {
-  border-color: #000;
-}
-
-.stock p {
-  margin-top: 10px;
-  font-size: 16px;
-  font-weight: bold;
-}
