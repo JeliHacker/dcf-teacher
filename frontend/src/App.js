@@ -9,11 +9,13 @@ import InstructionsComponent from './components/InstructionsComponent';
 import UserSubmissionComponent from './components/UserSubmissionComponent';
 import useChat from './hooks/useChat';
 import { ChakraProvider } from '@chakra-ui/react'
+import IntroSection from './components/IntroSection';
 
 function App() {
   const [currentSection, setCurrentSection] = useState(0);
   const [selectedStock, setSelectedStock] = useState(null);
   const [sections, setSections] = useState([
+    { title: 'Step 0: Introduction', content: 'Welcome to DCF Teacher!', unlocked: true, completed: false },
     { title: 'Step 1: Select a Company', content: 'Select a company to analyze.', unlocked: true, completed: false },
     { title: 'Step 2: Gather Data', content: 'Gather financial data for the selected company.', unlocked: false, completed: false },
     { title: 'Step 3: Calculate Free Cash Flow', content: 'Calculate the Free Cash Flow.', unlocked: false, completed: false },
@@ -71,7 +73,15 @@ function App() {
         />
         <div className="Panel2">
 
-          {currentSection === 0 ? (
+        {currentSection === 0 ? (
+            <SectionComponent
+              title={sections[currentSection].title}
+              onComplete={completeSection}
+              completed={sections[currentSection].completed}
+            >
+              <IntroSection />
+            </SectionComponent>
+          ) : currentSection === 1 ? (
             <SectionComponent
               title={sections[currentSection].title}
               onComplete={completeSection}
@@ -79,7 +89,7 @@ function App() {
             >
               <StockSelection onSelectStock={handleStockSelect} />
             </SectionComponent>
-          ) : currentSection === 1 && selectedStock ? (
+          ) : currentSection === 2 && selectedStock ? (
             <SectionComponent
               title={sections[currentSection].title}
               onComplete={completeSection}
@@ -95,7 +105,7 @@ function App() {
 
             </SectionComponent>
 
-          ) : currentSection === 2 && selectedStock ? (
+          ) : currentSection === 3 && selectedStock ? (
             <SectionComponent
               title={sections[currentSection].title}
               content={sections[currentSection].content}
@@ -110,7 +120,7 @@ function App() {
                 onComplete={completeSection}
               />
             </SectionComponent>
-          ) : currentSection === 3 && selectedStock ? (
+          ) : currentSection === 4 && selectedStock ? (
             <SectionComponent
               title={sections[currentSection].title}
               content={sections[currentSection].content}

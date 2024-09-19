@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import { Button } from '@chakra-ui/react';
 
 function TeacherChat({ chatHistory, isLoading, userMessage, setUserMessage, sendMessage }) {
   const handleSendMessage = () => {
@@ -25,9 +26,9 @@ function TeacherChat({ chatHistory, isLoading, userMessage, setUserMessage, send
             placeholder="Ask the teacher..."
             disabled={isLoading}
           />
-          <button onClick={handleSendMessage} disabled={isLoading}>
+          <Button onClick={handleSendMessage} disabled={isLoading} colorScheme={'blue'}>
             {isLoading ? 'Sending...' : 'Send'}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

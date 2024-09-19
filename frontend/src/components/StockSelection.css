@@ -1,0 +1,83 @@
+.stock-selection {
+    text-align: center;
+}
+
+.stocks {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.stock {
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+    padding: 10px;
+}
+
+.image-container {
+    padding: 10px;
+}
+
+.stock:hover p {
+    background-position: 0;
+}
+
+.stock:hover p::before {
+    width: 100%;
+}
+
+.stock-logo-container {
+    width: 120px;
+    /* Slightly larger to include padding */
+    height: 120px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    /* This creates the space between the image and the border */
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+}
+
+.stock-logo {
+    width: 100px;
+    height: 100px;
+}
+
+.stock:hover .stock-logo-container {
+    border-color: #54b3d6;
+}
+
+.stock p {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+p {
+    background-image: linear-gradient(to right, #54b3d6, #54b3d6 50%, #000 50%);
+    background-size: 200% 100%;
+    background-position: -100%;
+    display: inline-block;
+    padding: 5px 0;
+    position: relative;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: all 0.3s ease-in-out;
+}
+
+p::before {
+    content: '';
+    background: #54b3d6;
+    display: block;
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    transition: all 0.3s ease-in-out;
+}
