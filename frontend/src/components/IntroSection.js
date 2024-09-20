@@ -3,11 +3,9 @@ import dcf_teacher_intro from '../assets/dcf_teacher_intro.png';
 import { Button } from '@chakra-ui/react';
 import './IntroSection.css';
 
-function IntroSection({ title, children, onComplete, completed }) {
+function IntroSection({ onComplete }) {
     return (
         <div className="section">
-            <h2>{title}</h2>
-            {children}
 
             <div className="intro-section">
                 <img src={dcf_teacher_intro} alt={"DCF Teacher"} className="intro-image" />
