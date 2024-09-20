@@ -19,7 +19,7 @@ function UserInputComponent({ currentSection, onSubmit }) {
     if (currentSection === 0) {
       setTopic('discounted cash flow valuation');
     }
-    await generateQuestion('balance sheet in financial statements');
+    await generateQuestion('discounted cash flow valuation');
   };
 
   // Handle answer submission
@@ -89,7 +89,7 @@ function UserInputComponent({ currentSection, onSubmit }) {
         </>
       )}
 
-      {currentSection === 1 && (
+      {currentSection === 2 && (
         <>
           <h3>Find the following data for 2023:</h3>
 
@@ -102,7 +102,7 @@ function UserInputComponent({ currentSection, onSubmit }) {
               value={operatingCashFlow}
               onChange={(e) => setOperatingCashFlow(e.target.value)}
               onFocus={handleFocus} // Disable glow on focus
-              style={{ marginLeft: '10px', width: '80px' }}
+              className='input-box'
             />
           </div>
 
@@ -115,7 +115,7 @@ function UserInputComponent({ currentSection, onSubmit }) {
               value={capitalExpenditures}
               onChange={(e) => setCapitalExpenditures(e.target.value)}
               onFocus={handleFocus} // Disable glow on focus
-              style={{ marginLeft: '10px', width: '80px' }}
+              className='input-box'
             />
           </div>
           <button
@@ -141,7 +141,7 @@ function UserInputComponent({ currentSection, onSubmit }) {
         </>
       )}
 
-      {currentSection === 2 && (
+      {currentSection === 3 && (
         <>
           <h3>Now, get the OCF and CapEx for each of the past 6 years.</h3>
 
@@ -154,7 +154,7 @@ function UserInputComponent({ currentSection, onSubmit }) {
               value={operatingCashFlow}
               onChange={(e) => setOperatingCashFlow(e.target.value)}
               onFocus={handleFocus} // Disable glow on focus
-              style={{ marginLeft: '10px', width: '80px' }}
+              className='input-box'
             />
           </div>
 
@@ -167,7 +167,7 @@ function UserInputComponent({ currentSection, onSubmit }) {
               value={capitalExpenditures}
               onChange={(e) => setCapitalExpenditures(e.target.value)}
               onFocus={handleFocus} // Disable glow on focus
-              style={{ marginLeft: '10px', width: '80px' }}
+              className='input-box'
             />
           </div>
           <button

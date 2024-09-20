@@ -96,7 +96,7 @@ h2 {
   padding: 10px;
   background-color: #f1f1f1; /* Background color for visual purposes */
   overflow-y: hidden;
-  width: 25%; /* Full width of the right column */
+  width: 30%; /* Full width of the right column */
   height: 100%;
 }
 
@@ -107,6 +107,7 @@ h2 {
   overflow-x: hidden; /* Prevent horizontal scrolling */
   word-wrap: break-word; /* Ensure long words break instead of overflow */
   height: 50vh; /* Full viewport height or adjust as necessary */
+  width: 100%;
 }
 
 .chat-container {

@@ -43,9 +43,13 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
 
     // Helper function to render tables
     const renderTable = (title, data) => {
-        if (!data) return <p>No data available for {title}</p>;
+        console.log(data);
+        if (!data || data.length === 0) return <p>No data available for {title}</p>;
+
+        const yearKeys = Object.keys(data[0]).filter(key => key !== 'Metric');
+        
         // Sort the years in descending order (newest first)
-        const sortedYears = Object.keys(data[0]).slice(1).sort((a, b) => {
+        const sortedYears = yearKeys.sort((a, b) => {
             const yearA = new Date(a).getFullYear();
             const yearB = new Date(b).getFullYear();
             return yearB - yearA;
@@ -59,7 +63,7 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
                             <tr>
                                 <th>Metric</th>
                                 {sortedYears.map((year, index) => (
-                                    <th key={index}>{year}</th>
+                                    <th key={index}>    {year}</th>
                                 ))}
                             </tr>
                         </thead>
@@ -74,6 +78,7 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
                             ))}
                         </tbody>
                     </table>
+
                 ) : (
                     <p>No data available for {title}</p>
                 )}

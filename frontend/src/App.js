@@ -26,6 +26,7 @@ function App() {
   const { chatHistory, isLoading, userMessage, setUserMessage, sendMessage } = useChat();
 
   const completeSection = () => {
+    console.log("completeSection");
     const updatedSections = sections.map((section, index) => {
       if (index === currentSection) {
         return { ...section, completed: true };
@@ -73,13 +74,17 @@ function App() {
         />
         <div className="Panel2">
 
-        {currentSection === 0 ? (
+          {currentSection === 0 ? (
             <SectionComponent
               title={sections[currentSection].title}
               onComplete={completeSection}
               completed={sections[currentSection].completed}
             >
-              <IntroSection />
+              <IntroSection
+                title={sections[currentSection].title}
+                onComplete={completeSection}
+                completed={sections[currentSection].completed}
+              />
             </SectionComponent>
           ) : currentSection === 1 ? (
             <SectionComponent

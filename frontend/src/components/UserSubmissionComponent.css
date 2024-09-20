@@ -6,6 +6,12 @@
 	overflow-y: auto;
 }
 
+.input-box {
+	margin-left: 10px;
+	width: 150px;
+	text-align: center;
+}
+
 @keyframes glow {
 	from {
 		box-shadow: 0 0 15px - 15px #aef4af;
