@@ -102,7 +102,7 @@ function UserInputComponent({ currentSection, onSubmit }) {
               value={operatingCashFlow}
               onChange={(e) => setOperatingCashFlow(e.target.value)}
               onFocus={handleFocus} // Disable glow on focus
-              style={{ marginLeft: '10px', width: '150px', textAlign: 'center' }}
+              className='input-box'
             />
           </div>
 
