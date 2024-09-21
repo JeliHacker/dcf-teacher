@@ -129,6 +129,8 @@ def return_financial_data(ticker):
         'cash_flow_statement': None
     }
 
+    docArray = []
+
     i = 1
     for url in sections_urls:
         response = requests.get(url=url, headers=HEADERS)
@@ -149,6 +151,7 @@ def return_financial_data(ticker):
             # Extract the data rows (each financial entry)
             rows = first_table.find_all('tr')[1:]  # Skipping the header rows
             data = []
+            doc = ""
 
             for row in rows:
                 columns = row.find_all('td')
@@ -157,7 +160,11 @@ def return_financial_data(ticker):
                     label = columns[0].text.strip()
                     values = [col.text.strip() for col in columns[1:]]
                     data.append([label] + values)
-
+            
+            for fin in data:
+                for line in fin:
+                    doc = doc + line+"\n"
+            docArray.append(doc)
             if "Months Ended" in years[0]:
                 years.pop(0)
             
@@ -171,7 +178,7 @@ def return_financial_data(ticker):
             if all(df is not None and not df.empty for df in financial_data.values()):
                 break
 
-    return financial_data
+    return [financial_data, docArray]
 
 
 if __name__ == "__main__":

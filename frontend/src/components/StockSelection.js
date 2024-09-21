@@ -1,7 +1,8 @@
 import React from 'react';
 import appleLogo from '../assets/aapl.png';
-import teslaLogo from '../assets/tsla.png';
 import nikeLogo from '../assets/nke.png';
+import teslaLogo from '../assets/tsla.png';
+import './StockSelection.css';
 
 function StockSelection({ onSelectStock }) {
   const stocks = [

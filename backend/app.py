@@ -35,7 +35,7 @@ def get_financial_data():
         return jsonify({"error": "Stock ticker is required"}), 400
 
     # Call your function to get the financial data
-    financial_data = return_financial_data(stock_ticker)
+    financial_data = return_financial_data(stock_ticker) 
     
     # Ensure the financial_data contains DataFrames
     if not financial_data:
@@ -43,12 +43,16 @@ def get_financial_data():
 
     # Convert the DataFrames to dictionaries
     financial_data_dict = {
-        'income_statement': financial_data['income_statement'].to_dict(orient="records"),
-        'balance_sheet': financial_data['balance_sheet'].to_dict(orient="records"),
-        'cash_flow_statement': financial_data['cash_flow_statement'].to_dict(orient="records")
+        'income_statement': financial_data[0]['income_statement'].to_dict(orient="records"),
+        'balance_sheet': financial_data[0]['balance_sheet'].to_dict(orient="records"),
+        'cash_flow_statement': financial_data[0]['cash_flow_statement'].to_dict(orient="records")
     }
     
-    return jsonify(financial_data_dict)
+    #return both the original data w/ text & dataframes as dictionary
+    return jsonify({
+               "fin_dict": financial_data_dict,
+               "original": financial_data[1]
+            })
 
 
 @app.route('/api/ask', methods=['POST'])

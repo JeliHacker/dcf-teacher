@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import axios from 'axios';
+import { useState } from 'react';
 
 function useChat() {
     const [chatHistory, setChatHistory] = useState([]);
@@ -28,7 +28,7 @@ function useChat() {
             setChatHistory(prevHistory => [
                 ...prevHistory,
                 newMessage,
-                { sender: 'bot', text: `Error fetching response. ${JSON.stringify(error)} ${error.message} ${error.response}` }
+                { sender: 'bot', text: `Teacher not available right now` }
             ]);
         } finally {
             setIsLoading(false);
