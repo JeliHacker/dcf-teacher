@@ -15,7 +15,7 @@ function App() {
   const [currentSection, setCurrentSection] = useState(0);
   const [selectedStock, setSelectedStock] = useState(null);
   const [sections, setSections] = useState([
-    { title: 'Step 0: Introduction', content: 'Welcome to DCF Teacher!', unlocked: true, completed: false },
+    { title: 'Step 0: Introduction', content: 'Welcome to DCF Teacher!', unlocked: true, completed: true },
     { title: 'Step 1: Select a Company', content: 'Select a company to analyze.', unlocked: true, completed: false },
     { title: 'Step 2: Gather Data', content: 'Gather financial data for the selected company.', unlocked: false, completed: false },
     { title: 'Step 3: Calculate Free Cash Flow', content: 'Calculate the Free Cash Flow.', unlocked: false, completed: false },
@@ -79,6 +79,8 @@ function App() {
               title={sections[currentSection].title}
               onComplete={completeSection}
               completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
             >
               <IntroSection
                 title={sections[currentSection].title}
@@ -91,6 +93,8 @@ function App() {
               title={sections[currentSection].title}
               onComplete={completeSection}
               completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
             >
               <StockSelection onSelectStock={handleStockSelect} />
             </SectionComponent>
@@ -99,6 +103,8 @@ function App() {
               title={sections[currentSection].title}
               onComplete={completeSection}
               completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
             >
               <InstructionsComponent text="Gather financial data for the selected company." />
               <FinancialStatements
@@ -116,6 +122,8 @@ function App() {
               content={sections[currentSection].content}
               onComplete={completeSection}
               completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
             >
               <InstructionsComponent text="Now, get the operating cash flows and the capital expenditures for each of the past 10 years." />
               <FinancialStatements
@@ -131,6 +139,8 @@ function App() {
               content={sections[currentSection].content}
               onComplete={completeSection}
               completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
             >
               <InstructionsComponent text="Now, get the operating cash flows and the capital expenditures for each of the past 10 years." />
               <FinancialStatements
@@ -146,6 +156,8 @@ function App() {
               content={sections[currentSection].content}
               onComplete={completeSection}
               completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
             />
           )}
         </div>

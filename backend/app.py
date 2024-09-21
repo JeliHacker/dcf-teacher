@@ -114,8 +114,8 @@ def submit_open_response_answer():
     # # Example input payload structure
     # correct_category = data['correctCategory']  # The correct category for the financial statement
     
-    prompt = f"I asked the user the following question: {question}. The user's answer was '{user_answer}'."
-    prompt += "Based on the financial data provided, can you evaluate the user's answer, telling me if I'm right, or explaining in a few sentences why I'm wrong?"
+    prompt = f"You just asked the following question: {question}. My answer was '{user_answer}'."
+    prompt += "Based on the financial data provided, can you evaluate my answer, telling me if I'm right, or explaining in a few sentences why I'm wrong?"
     prompt += "Financial data is as follows. For each category, the first number corresponds to 2023, the second number is 2022, and the third (if there is one) is for 2021. \n" 
     prompt += financial_data 
     print("The prompt is: ", prompt)
@@ -124,22 +124,6 @@ def submit_open_response_answer():
     print(f"type(response): {type(response)}")
     
     return response.text
-
-
-def get_feedback(user_answer, correct_value, financial_data):
-    # Structure a prompt to send to Gemini for nuanced feedback
-    prompt = f"""
-    The user provided an incorrect value for {user_answer}. 
-    The correct value for {correct_category} is {correct_value}.
-    Based on the financial data provided, can you explain why this mistake was made, 
-    and suggest what the user might have been thinking?
-    
-    Financial data:
-    {financial_data}
-    """
-    
-    # Make the call to Gemini and get feedback
-    return gemini_model.call_gemini(prompt)
 
 
 if __name__ == "__main__":
