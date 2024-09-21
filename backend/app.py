@@ -4,6 +4,7 @@ import os
 import requests
 import google.generativeai as genai
 from annual_report_data import return_financial_data
+import gemini_model
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -44,12 +45,16 @@ def get_financial_data():
 
     # Convert the DataFrames to dictionaries
     financial_data_dict = {
-        'income_statement': financial_data['income_statement'].to_dict(orient="records"),
-        'balance_sheet': financial_data['balance_sheet'].to_dict(orient="records"),
-        'cash_flow_statement': financial_data['cash_flow_statement'].to_dict(orient="records")
+        'income_statement': financial_data[0]['income_statement'].to_dict(orient="records"),
+        'balance_sheet': financial_data[0]['balance_sheet'].to_dict(orient="records"),
+        'cash_flow_statement': financial_data[0]['cash_flow_statement'].to_dict(orient="records")
     }
     
-    return jsonify(financial_data_dict)
+    return jsonify(
+    {
+        "fin_dict": financial_data_dict,
+        "original": financial_data[1]
+    })
 
 
 @app.route('/api/ask', methods=['POST'])
@@ -77,11 +82,12 @@ def generate_question():
     
     return response.text
 
-@app.route('/api/submit_answer', methods=['POST'])
-def submit_answer():
-    print("Received request at /api/submit_answer")
+@app.route('/api/submit_multiple_choice_answer', methods=['POST'])
+def submit_multiple_choice_answer():
+    print("Received request at /api/submit_multiple_choice_answer")
     original_question = request.json.get('question')
     user_answer = request.json.get('answer')
+    # relevant_data = request.json.get('data') # this is just an idea right now
     
     prompt = f"You just asked me a multiple choice question: {original_question}. My answer was '{user_answer}'. In a few sentences, evaluate my answer. Keep in mind that my answer might be incorrect. Tell me if I'm wrong."
     response = model.generate_content(prompt)
@@ -89,6 +95,51 @@ def submit_answer():
     print(f"type(response): {type(response)}")
     
     return response.text
+
+
+@app.route('/api/submit_open_response_answer', methods=['POST'])
+def submit_open_response_answer():
+    print('Received request at /api/submit_open_response_answer')
+    # The question (or prompt, etc)
+    # the financial data (what we have)
+    # the user's answer
+    
+    question = request.json.get('question')
+    user_answer = request.json.get('answer')
+    financial_data = request.json.get('financial_data')
+    print("question: ", question)
+    print("user_answer: ", user_answer)
+    print("data: ", financial_data)
+    
+    # # Example input payload structure
+    # correct_category = data['correctCategory']  # The correct category for the financial statement
+    
+    prompt = f"I asked the user the following question: {question}. The user's answer was '{user_answer}'."
+    prompt += "Based on the financial data provided, can you evaluate the user's answer, telling me if I'm right, or explaining in a few sentences why I'm wrong?"
+    prompt += "Financial data is as follows. For each category, the first number corresponds to 2023, the second number is 2022, and the third (if there is one) is for 2021. \n" 
+    prompt += financial_data 
+    print("The prompt is: ", prompt)
+    response = model.generate_content(prompt)
+    print(f"Generated response: {response}")
+    print(f"type(response): {type(response)}")
+    
+    return response.text
+
+
+def get_feedback(user_answer, correct_value, financial_data):
+    # Structure a prompt to send to Gemini for nuanced feedback
+    prompt = f"""
+    The user provided an incorrect value for {user_answer}. 
+    The correct value for {correct_category} is {correct_value}.
+    Based on the financial data provided, can you explain why this mistake was made, 
+    and suggest what the user might have been thinking?
+    
+    Financial data:
+    {financial_data}
+    """
+    
+    # Make the call to Gemini and get feedback
+    return gemini_model.call_gemini(prompt)
 
 
 if __name__ == "__main__":

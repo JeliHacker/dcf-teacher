@@ -24,12 +24,32 @@ function useQuestion() {
         }
     };
 
-    const submitAnswer = async (question, answer) => {
-        console.log("Submit Answer", question, answer);
+    /**
+     * Submits a multiple-choice answer to the server for evaluation
+     * @param {object} question The question object containing the question and possible answers
+     * @param {string} answer The user's answer
+     */
+    const submitMultipleChoiceAnswer = async (question, answer) => {
         setIsEvaluating(true);
         try {
-            const response = await axios.post(`${apiUrl}/api/submit_answer`, { question, answer });
+            const response = await axios.post(`${apiUrl}/api/submit_multiple_choice_answer`, { question, answer });
 
+            // Assuming the response contains an evaluation result
+            setEvaluationResult(response.data);
+        } catch (error) {
+            console.error('Error submitting or evaluating answer:', error);
+        } finally {
+            setIsEvaluating(false);
+        }
+    };
+
+    const submitOpenResponseAnswer = async (question, answer, financial_data) => {
+        console.log("Submit Answer", question, answer, financial_data);
+        setIsEvaluating(true);
+        try {
+            const response = await axios.post(`${apiUrl}/api/submit_open_response_answer`, { question, answer, financial_data });
+
+            // Assuming the response contains an evaluation result
             setEvaluationResult(response.data);
         } catch (error) {
             console.error('Error submitting or evaluating answer:', error);
@@ -44,7 +64,8 @@ function useQuestion() {
         questionData, // Return the generated question
         isEvaluating,
         evaluationResult,
-        submitAnswer,
+        submitMultipleChoiceAnswer,
+        submitOpenResponseAnswer
     };
 }
 

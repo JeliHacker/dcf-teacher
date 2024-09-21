@@ -8,7 +8,7 @@ function UserInputComponent({ currentSection, onSubmit }) {
   const [hasFocused, setHasFocused] = useState(false);
 
   // Destructure from useQuestion to get question data, loading state, etc.
-  const { generateQuestion, submitAnswer, questionData, isLoading, isEvaluating, evaluationResult } = useQuestion();
+  const { generateQuestion, isLoading, questionData, isEvaluating, evaluationResult, submitMultipleChoiceAnswer, submitOpenResponseAnswer } = useQuestion();
   const [selectedAnswer, setSelectedAnswer] = useState('');
   const [topic, setTopic] = useState('');
   const [operatingCashFlow, setOperatingCashFlow] = useState('');
@@ -22,11 +22,43 @@ function UserInputComponent({ currentSection, onSubmit }) {
     await generateQuestion('discounted cash flow valuation');
   };
 
-  // Handle answer submission
-  const handleAnswerSubmit = () => {
+  /**
+   * Handle answer submission for all types of questions
+   * @param {string} type The type of answer submitted (e.g. multiple choice, open response)
+   */
+  const handleMultipleChoiceAnswerSubmit = (type) => {
     if (selectedAnswer) {
-      submitAnswer(questionData, selectedAnswer); // Submit the selected answer to backend
+      if (type === 'multiple choice') {
+        submitMultipleChoiceAnswer(questionData, selectedAnswer);
+      } else if (type === 'open response') {
+        submitOpenResponseAnswer(questionData);
+      }
     }
+  };
+
+  const handleOpenResponseAnswerSubmit = (type, question, answerAsJSON) => {
+    
+
+
+    const cachedData = JSON.parse(localStorage.getItem(`OriginalData`));
+    let financial_data = '';
+
+    for (let i = 0; i < 3; i++) {
+        if (i === 0) {
+            financial_data = financial_data + `\n Financial Doc: Balance Sheet\n ${cachedData[i]}\n`;
+        }
+
+        if (i === 1) {
+            financial_data = financial_data + `\n Financial Doc: Income Statement\n ${cachedData[i]}\n`;
+        }
+
+        if (i === 2) {
+            financial_data = financial_data + `\n Financial Doc: CashFlows\n ${cachedData[i]}\n`;
+        }
+    }
+
+    console.log('Answer submitted:', selectedAnswer, type, financial_data);
+    submitOpenResponseAnswer(question, answerAsJSON, financial_data);
   };
 
   // Handle selecting an answer (A, B, C, or D)
@@ -34,7 +66,7 @@ function UserInputComponent({ currentSection, onSubmit }) {
     await setSelectedAnswer(answer);
     console.log('Selected answer:', selectedAnswer);
     if (answer) {
-      submitAnswer(questionData, answer); // Submit the selected answer to backend
+      submitMultipleChoiceAnswer(questionData, answer); // Submit the selected answer to backend
     }
   };
 
@@ -119,7 +151,13 @@ function UserInputComponent({ currentSection, onSubmit }) {
             />
           </div>
           <button
-            onClick={handleAnswerSubmit}
+            onClick={() => handleOpenResponseAnswerSubmit(
+              'open response',
+              'Find the following data for 2023: Operating Cash Flows and Capital Expenditures',
+              {
+                'operatingCashFlow': operatingCashFlow,
+                'capitalExpenditures': capitalExpenditures
+              })}
             style={{
               backgroundColor: 'green',
               color: 'white',
@@ -138,6 +176,13 @@ function UserInputComponent({ currentSection, onSubmit }) {
             Submit
             <span style={{ marginLeft: '5px' }}>▶</span>
           </button>
+          
+          {evaluationResult && (
+            <div>
+              <h3>Result:</h3>
+              <ReactMarkdown>{evaluationResult}</ReactMarkdown>
+            </div>
+          )}
         </>
       )}
 
@@ -171,7 +216,10 @@ function UserInputComponent({ currentSection, onSubmit }) {
             />
           </div>
           <button
-            onClick={handleAnswerSubmit}
+            onClick={() => handleOpenResponseAnswerSubmit('open response', {
+              'operatingCashFlow': operatingCashFlow,
+              'capitalExpenditures': capitalExpenditures
+            })}
             style={{
               backgroundColor: 'green',
               color: 'white',

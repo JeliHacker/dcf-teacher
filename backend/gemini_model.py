@@ -6,11 +6,9 @@ load_dotenv()
 API_KEY = os.getenv('API_KEY')
 genai.configure(api_key=API_KEY)
 
-# model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-1.5-flash")
 
-# response = model.generate_content('Which states have the highest property tax rates, and which states have the lowest?')
-# print(response.text)
-
+response = model.generate_content('Which states have the highest property tax rates, and which states have the lowest?')
 
 if __name__ == "__main__":
     text = "Hello world. My name is Eli."
@@ -19,5 +17,5 @@ if __name__ == "__main__":
     
     model = genai.GenerativeModel("gemini-1.5-flash")
 
-    response = model.generate_content(f'You already know my name. What is it? (Hint: my name is Eli)')
+    response = model.generate_content(f'What is my name?')
     print(response.text)
