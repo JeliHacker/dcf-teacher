@@ -1,6 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Tabs, Tab } from '@chakra-ui/react'
+import { Button, Tabs, Tab, Spinner, Text } from '@chakra-ui/react';
+import gemini from '../models/gemini.js';
+
+
+const test = () => {
+    const cachedData = JSON.parse(localStorage.getItem(`OriginalData`));
+
+    console.log("Line 38: " + cachedData);
+    if (cachedData === null || cachedData === undefined) return;
+    
+
+    let prompt = "Can we calculate the discounted cash flow from the values in this map? Assume a discount rate of 9% and free cash flow growth rate of 10%, use the Statement of Cash Flow and Income statement to calculate free cash flow yourself. There are 15204137000 shares outstanding. Provide the intrinsic value per share. Keep in mind every number given is in millions\n";
+
+    for (let i = 0; i < 3; i++) {
+        if (i === 0) {
+            prompt = prompt + `\n Financial Doc: Balance Sheet\n ${cachedData[i]}\n`;
+        }
+
+        if (i === 1) {
+            prompt = prompt + `\n Financial Doc: Income Statement\n ${cachedData[i]}\n`;
+        }
+
+        if (i === 2) {
+            prompt = prompt + `\n Financial Doc: CashFlows\n ${cachedData[i]}\n`;
+        }
+    }
+
+    gemini.sendPrompt(prompt)
+        .then((res) => {
+            console.log("this is the result: " + res);
+        })
+        .catch((err) => {
+            console.log("error: " + err);
+        })
+
+}
 
 function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
     const [loading, setLoading] = useState(true);
@@ -21,6 +56,7 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
         const cachedData = localStorage.getItem(`financialData_${ticker}`);
         if (cachedData) {
             setFinancialData(JSON.parse(cachedData));
+            // test();
             setLoading(false);
             return;
         }
@@ -31,8 +67,9 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
         setLoading(true);
         axios.get(`${apiUrl}/api/financial-data?ticker=${ticker}`)
             .then(response => {
-                setFinancialData(response.data);
-                localStorage.setItem(`financialData_${ticker}`, JSON.stringify(response.data)); // Cache data in localStorage
+                setFinancialData(response.data.fin_dict);
+                localStorage.setItem("OriginalData", JSON.stringify(response.data.original)); // Cache data in localStorage
+                localStorage.setItem(`financialData_${ticker}`, JSON.stringify(response.data.fin_dict)); // Cache data in localStorage
                 setLoading(false);
             })
             .catch(error => {
@@ -43,11 +80,10 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
 
     // Helper function to render tables
     const renderTable = (title, data) => {
-        console.log(data);
         if (!data || data.length === 0) return <p>No data available for {title}</p>;
 
         const yearKeys = Object.keys(data[0]).filter(key => key !== 'Metric');
-        
+
         // Sort the years in descending order (newest first)
         const sortedYears = yearKeys.sort((a, b) => {
             const yearA = new Date(a).getFullYear();
@@ -90,7 +126,12 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
     return (
         <div style={{ position: 'relative', height: '80vh', width: '100%' }}>
             {loading ? (
-                <div>Loading...</div>
+                <>
+                    <Spinner size='xl' color='green.500' />
+                    <br />
+                    <Text>Fetching financial data...</Text>
+                    <br />
+                </>
             ) : (
                 <>
                     <h1>Financial Statements for {ticker.toUpperCase()}</h1>
