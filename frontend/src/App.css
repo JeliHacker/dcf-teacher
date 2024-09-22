@@ -3,6 +3,7 @@
   flex-direction: row;
   text-align: center;
   height: 100vh;
+  
 }
 
 
@@ -45,31 +46,18 @@ h2 {
   font-size: xx-large;
 }
 
-.guide {
-  flex: 0 0 auto;
-  position: relative;
-  width: 15%;
-}
-
-.guide ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.guide button {
-  padding: 5px;
-  margin-left: 5px;
-  margin-right: 5px;
-  width: 90%;
-  text-align: left;
-}
-
 .Panel2 {
-  display: flex;
+  display:flex;
   flex-direction: column;
   flex-grow: 1;
-  width: 100%;
+   width: 100%;
+  /* width:fit-content */
 }
+
+/* .Panel2 .GuideDrawer
+{
+  position: absolute;
+} */
 
 .Panel2 tbody tr:nth-child(odd) {
   background-color: #cbeefe; /* Light grey background */
@@ -101,58 +89,6 @@ h2 {
   height: 100%;
   box-sizing: border-box;
 }
-
-
-.teacher-chat {
-  flex: 1;
-  overflow-y: auto; /* Allow vertical scrolling for large chat content */
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  word-wrap: break-word; /* Ensure long words break instead of overflow */
-  height: 50vh; /* Full viewport height or adjust as necessary */
-  width: 100%;
-}
-
-.chat-container {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
-  height: 100%;
-}
-
-.chat-history {
-  flex: 1;
-  overflow: scroll;
-}
-
-.chat-input {
-  display: flex;
-  padding: 10px;
-  border-top: 1px solid #ccc; /* Optional: To separate visually from history */
-}
-
-.chat-input input {
-  flex: 1; /* Takes up all available space */
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.chat-input button {
-  margin-left: 10px;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.chat-input button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
-
 
 .separator {
   width: 100%;

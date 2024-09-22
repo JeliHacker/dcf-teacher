@@ -120,7 +120,7 @@ def return_financial_data(ticker):
     if not filings:
         return 
     
-    most_recent_10k = filings[0]
+    most_recent_10k = filings[0] #3 
     sections_urls = get_financial_statements_urls_given_accession_number(most_recent_10k['accessionNumber'], cik=COMPANY_CIK)
 
     financial_data = {
@@ -159,7 +159,7 @@ def return_financial_data(ticker):
                     label = columns[0].text.strip()
                     values = [col.text.strip() for col in columns[1:]]
                     data.append([label] + values)
-                    
+    
             for fin in data:
                 for line in fin:
                     doc = doc + line+"\n"
@@ -177,7 +177,8 @@ def return_financial_data(ticker):
             # Stop once all three statements are processed
             if all(df is not None and not df.empty for df in financial_data.values()):
                 break
-
+    docArray.append(years)
+    print("docArray: ", docArray)
     return [financial_data, docArray]
 
 

@@ -1,10 +1,12 @@
+import { Button } from '@chakra-ui/react';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Button } from '@chakra-ui/react';
 
-function TeacherChat({ chatHistory, isLoading, userMessage, setUserMessage, sendMessage }) {
+import './TeacherChat.css';
+
+function TeacherChat({ chatHistory, isLoading, userMessage, setUserMessage, sendMessage, ticker }) {
   const handleSendMessage = () => {
-    sendMessage(userMessage); // Use the sendMessage function from the custom hook
+    sendMessage(userMessage, ticker); // Use the sendMessage function from the custom hook
   };
 
 

@@ -1,15 +1,15 @@
+import { ChakraProvider } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import GuideComponent from './components/GuideComponent';
+import './App.css';
+import ChatDrawer from './components/ChatDrawer.js';
+import FinancialStatements from './components/FinancialStatements';
+import GuideDrawer from './components/GuideDrawer';
+import InstructionsComponent from './components/InstructionsComponent';
+import IntroSection from './components/IntroSection';
 import SectionComponent from './components/SectionComponent';
 import StockSelection from './components/StockSelection';
-import FinancialStatements from './components/FinancialStatements';
-import TeacherChat from './components/TeacherChat';
-import './App.css';
-import InstructionsComponent from './components/InstructionsComponent';
 import UserSubmissionComponent from './components/UserSubmissionComponent';
 import useChat from './hooks/useChat';
-import { ChakraProvider } from '@chakra-ui/react'
-import IntroSection from './components/IntroSection';
 
 function App() {
   const [currentSection, setCurrentSection] = useState(0);
@@ -54,7 +54,7 @@ function App() {
     console.log("handleStockSelect");
     setSelectedStock(stockDetails[stockName]);
     let message = `I want to analyze ${stockName}.`;
-    sendMessage(message);
+    sendMessage(message, stockName);
     console.log("i tried to send the message");
     completeSection();
   };
@@ -67,11 +67,25 @@ function App() {
 
     <ChakraProvider>
       <div className="App">
-        <GuideComponent
-          currentSection={currentSection}
-          sections={sections}
-          navigateToSection={navigateToSection}
-        />
+        <div className='right-column'>
+        <ChatDrawer
+            chatHistory={chatHistory}
+            isLoading={isLoading}
+            userMessage={userMessage}
+            setUserMessage={setUserMessage}
+            sendMessage={sendMessage}
+            ticker={selectedStock !== null ? selectedStock.ticker:''}
+          />
+
+<GuideDrawer
+                className="GuideDrawer"
+                currentSection={currentSection}
+                sections={sections}
+                navigateToSection={navigateToSection}
+              />
+
+          <UserSubmissionComponent currentSection={currentSection} sections={sections} onSubmit={onSubmitAnswers} />
+        </div>
         <div className="Panel2">
 
           {currentSection === 0 ? (
@@ -82,6 +96,7 @@ function App() {
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
             >
+              
               <IntroSection
                 title={sections[currentSection].title}
                 onComplete={completeSection}
@@ -160,17 +175,6 @@ function App() {
               navigateToSection={navigateToSection}
             />
           )}
-        </div>
-        <div className='right-column'>
-          <TeacherChat
-            chatHistory={chatHistory}
-            isLoading={isLoading}
-            userMessage={userMessage}
-            setUserMessage={setUserMessage}
-            sendMessage={sendMessage}
-          />
-          <hr className="separator" />
-          <UserSubmissionComponent currentSection={currentSection} sections={sections} onSubmit={onSubmitAnswers} />
         </div>
       </div>
     </ChakraProvider>
