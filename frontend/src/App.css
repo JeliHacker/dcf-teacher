@@ -1,8 +1,8 @@
 .App {
   display: flex;
   flex-direction: row;
-  padding: 20px;
   text-align: center;
+  height: 100vh;
 }
 
 
@@ -41,17 +41,123 @@
   }
 }
 
+h2 {
+  font-size: xx-large;
+}
+
 .guide {
-  width: 20%;
-  margin-right: 20px;
+  flex: 0 0 auto;
+  position: relative;
+  width: 15%;
+}
+
+.guide ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.guide button {
+  padding: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 90%;
+  text-align: left;
+}
+
+.Panel2 {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.Panel2 tbody tr:nth-child(odd) {
+  background-color: #cbeefe; /* Light grey background */
+}
+
+.Panel2 tbody tr:nth-child(even) {
+  background-color: #ffffff; /* White background */
 }
 
 .section {
-  width: 70%;
+  flex: 3;
+  overflow-y: auto; /* Only the middle section is scrollable */
   border: 1px solid #ddd;
   padding: 20px;
   border-radius: 5px;
   background-color: #f9f9f9;
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; /* Space between chat and user input */
+  padding: 10px;
+  background-color: #f1f1f1; /* Background color for visual purposes */
+  overflow-y: hidden;
+  overflow-x: hidden;
+  width: 30%; /* Full width of the right column */
+  height: 100%;
+  box-sizing: border-box;
+}
+
+
+.teacher-chat {
+  flex: 1;
+  overflow-y: auto; /* Allow vertical scrolling for large chat content */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  word-wrap: break-word; /* Ensure long words break instead of overflow */
+  height: 50vh; /* Full viewport height or adjust as necessary */
+  width: 100%;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+}
+
+.chat-history {
+  flex: 1;
+  overflow: scroll;
+}
+
+.chat-input {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ccc; /* Optional: To separate visually from history */
+}
+
+.chat-input input {
+  flex: 1; /* Takes up all available space */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.chat-input button {
+  margin-left: 10px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.chat-input button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+
+.separator {
+  width: 100%;
+  background-color: red;
+  border: 1px solid black;
 }
 
 button {
@@ -63,42 +169,4 @@ button {
 button:disabled {
   cursor: not-allowed;
   background-color: #ccc;
-}
-
-.stock-selection {
-  text-align: center;
-}
-
-.stocks {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-.stock {
-  cursor: pointer;
-  text-align: center;
-}
-
-.stock-logo {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: 2px solid #ccc;
-  transition: border-color 0.3s ease;
-}
-
-.stock:hover .stock-logo {
-  border-color: #000;
-}
-
-.stock p {
-  margin-top: 10px;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.chat-container {
-  height: 50vh;
-  overflow: scroll;
 }

@@ -7,13 +7,15 @@ import TeacherChat from './components/TeacherChat';
 import './App.css';
 import InstructionsComponent from './components/InstructionsComponent';
 import UserSubmissionComponent from './components/UserSubmissionComponent';
-import axios from 'axios';
 import useChat from './hooks/useChat';
+import { ChakraProvider } from '@chakra-ui/react'
+import IntroSection from './components/IntroSection';
 
 function App() {
   const [currentSection, setCurrentSection] = useState(0);
   const [selectedStock, setSelectedStock] = useState(null);
   const [sections, setSections] = useState([
+    { title: 'Step 0: Introduction', content: 'Welcome to DCF Teacher!', unlocked: true, completed: true },
     { title: 'Step 1: Select a Company', content: 'Select a company to analyze.', unlocked: true, completed: false },
     { title: 'Step 2: Gather Data', content: 'Gather financial data for the selected company.', unlocked: false, completed: false },
     { title: 'Step 3: Calculate Free Cash Flow', content: 'Calculate the Free Cash Flow.', unlocked: false, completed: false },
@@ -24,6 +26,7 @@ function App() {
   const { chatHistory, isLoading, userMessage, setUserMessage, sendMessage } = useChat();
 
   const completeSection = () => {
+    console.log("completeSection");
     const updatedSections = sections.map((section, index) => {
       if (index === currentSection) {
         return { ...section, completed: true };
@@ -43,9 +46,9 @@ function App() {
   const handleStockSelect = (stockName) => {
     // Assuming that you have a way to determine the CIK and accession number based on the selected stock
     const stockDetails = {
-        'aapl': { cik: '0000320193', accessionNumber: '0000320193-21-000065', ticker : 'aapl' },
-        'tsla': { cik: '0001318605', accessionNumber: '0001318605-21-000063', ticker : 'tsla' },
-        'nke': { cik: '0000320187', accessionNumber: '0000320187-21-000056', ticker : 'nke' },
+      'aapl': { cik: '0000320193', accessionNumber: '0000320193-21-000065', ticker: 'aapl' },
+      'tsla': { cik: '0001318605', accessionNumber: '0001318605-21-000063', ticker: 'tsla' },
+      'nke': { cik: '0000320187', accessionNumber: '0000320187-21-000056', ticker: 'nke' },
     };
 
     console.log("handleStockSelect");
@@ -54,74 +57,123 @@ function App() {
     sendMessage(message);
     console.log("i tried to send the message");
     completeSection();
-};
+  };
 
-const onSubmitAnswers = (answers) => {
+  const onSubmitAnswers = (answers) => {
     console.log(answers);
-};
+  };
 
   return (
-    <div className="App">
-      <GuideComponent
-        currentSection={currentSection}
-        sections={sections}
-        navigateToSection={navigateToSection}
-      />
-      {currentSection === 0 ? (
-        <SectionComponent
-          title={sections[currentSection].title}
-          onComplete={completeSection}
-          completed={sections[currentSection].completed}
-        >
-          <StockSelection onSelectStock={handleStockSelect} />
-        </SectionComponent>
-      ) : currentSection === 1 && selectedStock ? (
-        <SectionComponent
-            title={sections[currentSection].title}
-            onComplete={completeSection}
-            completed={sections[currentSection].completed}
-        >
-          <InstructionsComponent text="Gather financial data for the selected company." />
-            <FinancialStatements
+
+    <ChakraProvider>
+      <div className="App">
+        <GuideComponent
+          currentSection={currentSection}
+          sections={sections}
+          navigateToSection={navigateToSection}
+        />
+        <div className="Panel2">
+
+          {currentSection === 0 ? (
+            <SectionComponent
+              title={sections[currentSection].title}
+              onComplete={completeSection}
+              completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
+            >
+              <IntroSection
+                title={sections[currentSection].title}
+                onComplete={completeSection}
+                completed={sections[currentSection].completed}
+              />
+            </SectionComponent>
+          ) : currentSection === 1 ? (
+            <SectionComponent
+              title={sections[currentSection].title}
+              onComplete={completeSection}
+              completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
+            >
+              <StockSelection onSelectStock={handleStockSelect} />
+            </SectionComponent>
+          ) : currentSection === 2 && selectedStock ? (
+            <SectionComponent
+              title={sections[currentSection].title}
+              onComplete={completeSection}
+              completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
+            >
+              <InstructionsComponent text="Gather financial data for the selected company." />
+              <FinancialStatements
                 cik={selectedStock.cik}
                 accessionNumber={selectedStock.accessionNumber}
                 ticker={selectedStock.ticker}
                 onComplete={completeSection}
+              />
+
+            </SectionComponent>
+
+          ) : currentSection === 3 && selectedStock ? (
+            <SectionComponent
+              title={sections[currentSection].title}
+              content={sections[currentSection].content}
+              onComplete={completeSection}
+              completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
+            >
+              <InstructionsComponent text="Now, get the operating cash flows and the capital expenditures for each of the past 10 years." />
+              <FinancialStatements
+                cik={selectedStock.cik}
+                accessionNumber={selectedStock.accessionNumber}
+                ticker={selectedStock.ticker}
+                onComplete={completeSection}
+              />
+            </SectionComponent>
+          ) : currentSection === 4 && selectedStock ? (
+            <SectionComponent
+              title={sections[currentSection].title}
+              content={sections[currentSection].content}
+              onComplete={completeSection}
+              completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
+            >
+              <InstructionsComponent text="Now, get the operating cash flows and the capital expenditures for each of the past 10 years." />
+              <FinancialStatements
+                cik={selectedStock.cik}
+                accessionNumber={selectedStock.accessionNumber}
+                ticker={selectedStock.ticker}
+                onComplete={completeSection}
+              />
+            </SectionComponent>
+          ) : (
+            <SectionComponent
+              title={sections[currentSection].title}
+              content={sections[currentSection].content}
+              onComplete={completeSection}
+              completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
             />
-            <UserSubmissionComponent onSubmit={onSubmitAnswers} />
-        </SectionComponent>
-        
-      ) : currentSection === 2 && selectedStock ? (
-        <SectionComponent
-          title={sections[currentSection].title}
-          content={sections[currentSection].content}
-          onComplete={completeSection}
-          completed={sections[currentSection].completed}
-        >
-          <FinancialStatements
-            cik={selectedStock.cik}
-            accessionNumber={selectedStock.accessionNumber}
-            ticker={selectedStock.ticker}
-            onComplete={completeSection}
+          )}
+        </div>
+        <div className='right-column'>
+          <TeacherChat
+            chatHistory={chatHistory}
+            isLoading={isLoading}
+            userMessage={userMessage}
+            setUserMessage={setUserMessage}
+            sendMessage={sendMessage}
           />
-          <UserSubmissionComponent onSubmit={onSubmitAnswers} />
-        </SectionComponent>
-      ) : (
-        <SectionComponent
-          title={sections[currentSection].title}
-          content={sections[currentSection].content}
-          onComplete={completeSection}
-          completed={sections[currentSection].completed}
-        />
-      )}
-      <TeacherChat 
-        chatHistory={chatHistory} 
-        isLoading={isLoading} 
-        userMessage={userMessage} 
-        setUserMessage={setUserMessage} 
-        sendMessage={sendMessage} 
-      />
-    </div>
+          <hr className="separator" />
+          <UserSubmissionComponent currentSection={currentSection} sections={sections} onSubmit={onSubmitAnswers} />
+        </div>
+      </div>
+    </ChakraProvider>
 
   );
 }

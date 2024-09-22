@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import useChat from '../hooks/useChat';
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import { Button } from '@chakra-ui/react';
 
 function TeacherChat({ chatHistory, isLoading, userMessage, setUserMessage, sendMessage }) {
   const handleSendMessage = () => {
-      sendMessage(userMessage); // Use the sendMessage function from the custom hook
+    sendMessage(userMessage); // Use the sendMessage function from the custom hook
   };
 
 
   return (
-    <div className="guide">
-      <h2>Chat</h2>
+    <div className="teacher-chat">
       <div className="chat-container">
         <div className="chat-history">
           {chatHistory.map((msg, index) => (
             <div key={index} className={`chat-message ${msg.sender}`}>
-              <strong>{msg.sender === 'user' ? 'You' : 'Bot'}: </strong>{msg.text}
+              <strong>{msg.sender === 'user' ? 'You' : 'Bot'}: </strong><ReactMarkdown>{msg.text}</ReactMarkdown>
             </div>
           ))}
         </div>
@@ -27,9 +26,9 @@ function TeacherChat({ chatHistory, isLoading, userMessage, setUserMessage, send
             placeholder="Ask the teacher..."
             disabled={isLoading}
           />
-          <button onClick={handleSendMessage} disabled={isLoading}>
+          <Button onClick={handleSendMessage} disabled={isLoading} colorScheme={'blue'}>
             {isLoading ? 'Sending...' : 'Send'}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

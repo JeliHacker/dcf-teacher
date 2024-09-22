@@ -1,26 +1,9 @@
 # DCF Teacher
-## How to Contribute
-1. Clone the project with `git clone https://github.com/JeliHacker/dcf-teacher-afrotech.git`
-2. Install the dependencies with `npm install`
-3. Create a `.env` file in the `/backend` folder. You can use this command: `touch /backend/.env`.
-4. You need two environment variables: `API_KEY` and `USER_AGENT`. For the `API_KEY`, you can get a Gemini key from [the docs](https://ai.google.dev/gemini-api/docs/api-key). For `USER_AGENT`, put in an email address. 
-    Example .env file:
-    ```
-    API_KEY="fiqmD31Ficirm5$jdoaW"
-    USER_AGENT="ilovetolearn@gmail.com"
-    ```
-5. You're all set! Look at the [issues](https://github.com/JeliHacker/dcf-teacher-afrotech/issues) tab or read the rest of the README to find something to work on, open a PR and describe your changes. 
-## Next Steps
-- display 3 financial statements in sections 2: Balance Sheet, Income Statement, Statement of Cash Flows
-- add answer submission box for user to type numbers. Evaluate answers, require correct answer before user can move on.
-
-  
+**An interactive tutorial to learn financial modeling**
 ## AfroTech AI Hackathon 2024
+We were inspired by [this](https://newprairiepress.org/cgi/viewcontent.cgi?article=1127&context=jft#:~:text=The%20financial%20survey%20revealed%20the,sample%20indicate%20that%20those%20with) study on investment behavior among different demographics.
 
-
-https://newprairiepress.org/cgi/viewcontent.cgi?article=1127&context=jft#:~:text=The%20financial%20survey%20revealed%20the,sample%20indicate%20that%20those%20with
-
-The median wealth for caucasian households was ~$110,000 whereas for black households it was ~$7,000. However, white people's incomes are less than 2x that of black people's, so income alone doesn't explain the wealth disparity. What does explain the disparity is that black people are much less likely to be invested in the stock market.
+The median wealth for caucasian households was ~$110,000 whereas for black households it was ~$7,000. However, white people's incomes are less than 2x that of black people's, so income alone doesn't explain the wealth disparity. What does explain the disparity is that black people are much less likely to invest in the stock market.
 
 The number one self-reported reason that people did not invest was "I do not understand how the stock market works". This project aims to provide financial education in the form of an interactive walkthrough for getting the intrinsic value of a stock using discounted cash flow valuation (DCF). 
 
@@ -30,6 +13,31 @@ Of course, picking individual stocks, much less calculating their intrinsic valu
 
 Direct quote from the study: "To entice the African American community to be more active investors, it seems that
 part of a holistic solution must include financial education."
+
+
+
+## How to Contribute
+1. Clone the project with `git clone https://github.com/JeliHacker/dcf-teacher-afrotech.git`. Then, navigate into the project: `cd dcf-teacher-afrotech`.
+2. Create a `.env` file in the `/backend` folder. On macOS/Linux: `touch /backend/.env` On Windows: `New-Item -Path backend\.env -ItemType File`.
+3. You need two environment variables: `API_KEY` and `USER_AGENT`. For the `API_KEY`, you can get a Gemini key from [the docs](https://ai.google.dev/gemini-api/docs/api-key). For `USER_AGENT`, put in an email address. 
+    Example .env file:
+    ```
+    API_KEY="your-gemini-api-key-here"
+    USER_AGENT="your-email@example.com"
+    ```
+4. Download [Poetry](https://python-poetry.org). On macOS/Linux:  `curl -sSL https://install.python-poetry.org | python3 -`. On Windows: `(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -`.
+5. Setup Poetry env: `poetry env use python3.12`. Make sure Python 3.12 is installed on your system. You can check this by running `python --version`.
+6. Install the Python dependencies with `poetry install`.
+7. Activate poetry virtual environment using: `poetry shell`.
+8. Run the API with `flask run --port 8000`.
+9. Install the dependencies in the `frontend` folder with `cd frontend && npm install`.
+10. Run `npm start` from the `frontend` folder.
+Contact @I-Johnson if you face any issues
+
+11. You're all set! Look at the [issues](https://github.com/JeliHacker/dcf-teacher-afrotech/issues) tab or read the rest of the README to find something to work on, open a PR and describe your changes. 
+## Next Steps
+- display 3 financial statements in sections 2: Balance Sheet, Income Statement, Statement of Cash Flows
+- add answer submission box for user to type numbers. Evaluate answers, require correct answer before user can move on.
 
 ### Possibly helpful resources
 https://github.com/alphanome-ai/sec-parser
