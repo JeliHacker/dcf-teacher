@@ -1,5 +1,6 @@
 import { Button } from '@chakra-ui/react';
 import React from 'react';
+import './GuideComponent.css';
 
 function GuideComponent({ currentSection, sections, navigateToSection }) {
   return (

@@ -14,4 +14,4 @@ const sendPrompt = async(message) =>
    return result.response.text();
 }
 
-module.exports = {sendPrompt}
+module.exports = {sendPrompt, model}

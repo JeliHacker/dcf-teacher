@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import './UserSubmissionComponent.css';
-import useQuestion from '../hooks/useQuestion';
-import ReactMarkdown from 'react-markdown';
 import { Button } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import useQuestion from '../hooks/useQuestion';
+import './UserSubmissionComponent.css';
 
 function UserInputComponent({ currentSection, onSubmit }) {
   const [hasFocused, setHasFocused] = useState(false);
@@ -43,7 +43,7 @@ function UserInputComponent({ currentSection, onSubmit }) {
     const cachedData = JSON.parse(localStorage.getItem(`OriginalData`));
     let financial_data = '';
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
         if (i === 0) {
             financial_data = financial_data + `\n Financial Doc: Balance Sheet\n ${cachedData[i]}\n`;
         }
@@ -55,6 +55,11 @@ function UserInputComponent({ currentSection, onSubmit }) {
         if (i === 2) {
             financial_data = financial_data + `\n Financial Doc: CashFlows\n ${cachedData[i]}\n`;
         }
+
+        if(i === 3)
+          {
+            financial_data = financial_data + "Years: "+cachedData[i];
+          }
     }
 
     console.log('Answer submitted:', selectedAnswer, type, financial_data);
@@ -133,7 +138,6 @@ function UserInputComponent({ currentSection, onSubmit }) {
               type="text"
               value={operatingCashFlow}
               onChange={(e) => setOperatingCashFlow(e.target.value)}
-              onFocus={handleFocus} // Disable glow on focus
               className='input-box'
             />
           </div>
@@ -146,7 +150,6 @@ function UserInputComponent({ currentSection, onSubmit }) {
               type="text"
               value={capitalExpenditures}
               onChange={(e) => setCapitalExpenditures(e.target.value)}
-              onFocus={handleFocus} // Disable glow on focus
               className='input-box'
             />
           </div>

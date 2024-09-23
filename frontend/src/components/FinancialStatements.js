@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { Button, Spinner, Tab, Tabs, Text } from '@chakra-ui/react';
 import axios from 'axios';
-import { Button, Tabs, Tab, Spinner, Text } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
 import gemini from '../models/gemini.js';
 
 
@@ -13,7 +13,7 @@ const test = () => {
 
     let prompt = "Can we calculate the discounted cash flow from the values in this map? Assume a discount rate of 9% and free cash flow growth rate of 10%, use the Statement of Cash Flow and Income statement to calculate free cash flow yourself. There are 15204137000 shares outstanding. Provide the intrinsic value per share. Keep in mind every number given is in millions\n";
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
         if (i === 0) {
             prompt = prompt + `\n Financial Doc: Balance Sheet\n ${cachedData[i]}\n`;
         }
@@ -25,6 +25,11 @@ const test = () => {
         if (i === 2) {
             prompt = prompt + `\n Financial Doc: CashFlows\n ${cachedData[i]}\n`;
         }
+
+        if(i === 3)
+            {
+              prompt = prompt + "Years: "+cachedData[i];
+            }
     }
 
     gemini.sendPrompt(prompt)
