@@ -37,29 +37,25 @@ function UserInputComponent({ currentSection, onSubmit }) {
   };
 
   const handleOpenResponseAnswerSubmit = (type, question, answerAsJSON) => {
-    
-
-
-    const cachedData = JSON.parse(localStorage.getItem(`OriginalData`));
+    const cachedData = JSON.parse(localStorage.getItem(`financialDataAsText`));
     let financial_data = '';
 
     for (let i = 0; i < 4; i++) {
-        if (i === 0) {
-            financial_data = financial_data + `\n Financial Doc: Balance Sheet\n ${cachedData[i]}\n`;
-        }
+      if (i === 0) {
+        financial_data = financial_data + `\n Financial Doc: Balance Sheet\n ${cachedData[i]}\n`;
+      }
 
-        if (i === 1) {
-            financial_data = financial_data + `\n Financial Doc: Income Statement\n ${cachedData[i]}\n`;
-        }
+      if (i === 1) {
+        financial_data = financial_data + `\n Financial Doc: Income Statement\n ${cachedData[i]}\n`;
+      }
 
-        if (i === 2) {
-            financial_data = financial_data + `\n Financial Doc: CashFlows\n ${cachedData[i]}\n`;
-        }
+      if (i === 2) {
+        financial_data = financial_data + `\n Financial Doc: CashFlows\n ${cachedData[i]}\n`;
+      }
 
-        if(i === 3)
-          {
-            financial_data = financial_data + "Years: "+cachedData[i];
-          }
+      if (i === 3) {
+        financial_data = financial_data + "Years: " + cachedData[i];
+      }
     }
 
     console.log('Answer submitted:', selectedAnswer, type, financial_data);
@@ -126,6 +122,15 @@ function UserInputComponent({ currentSection, onSubmit }) {
         </>
       )}
 
+      {currentSection === 1 && (
+        <>
+          <div>
+            <h3 style={{ fontSize: '28px', textAlign: 'center' }}>Select a company to value.</h3>
+            <h1>Topic: {topic}</h1>
+          </div>
+        </>
+      )}
+
       {currentSection === 2 && (
         <>
           <h3>Find the following data for 2023:</h3>
@@ -179,7 +184,7 @@ function UserInputComponent({ currentSection, onSubmit }) {
             Submit
             <span style={{ marginLeft: '5px' }}>▶</span>
           </button>
-          
+
           {evaluationResult && (
             <div>
               <h3>Result:</h3>

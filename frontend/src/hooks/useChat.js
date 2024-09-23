@@ -16,7 +16,7 @@ function useChat() {
 
         try {
             // Make request to your Flask API instead of Gemini directly
-            const cachedData = JSON.parse(localStorage.getItem(`OriginalData`))
+            const cachedData = JSON.parse(localStorage.getItem(`financialDataAsText`))
 
             let historyText =  `${ticker} history: `;
 

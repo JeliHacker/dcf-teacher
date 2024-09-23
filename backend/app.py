@@ -125,6 +125,18 @@ def submit_open_response_answer():
     
     return response.text
 
+@app.route('/api/financial-data/operating_cash_flows', methods=['GET'])
+def get_operating_cash_flows():
+    print('Received request at /api/submit_open_response_answer')
+    # The question (or prompt, etc)
+    # the financial data (what we have)
+    # the user's answer
+    
+    stock_ticker = request.args.get('stock_ticker')
+    year = request.args.get('year')
+    
+    return jsonify({'message': 6969})
+
 
 if __name__ == "__main__":
     app.run(debug=True)
