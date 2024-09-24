@@ -1,6 +1,7 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import './App.css';
+import CashFlowProjectionsComponent from './components/CashFlowProjectionsComponent.js';
 import ChatDrawer from './components/ChatDrawer.js';
 import FinancialStatements from './components/FinancialStatements';
 import GuideDrawer from './components/GuideDrawer';
@@ -9,7 +10,6 @@ import IntroSection from './components/IntroSection';
 import SectionComponent from './components/SectionComponent';
 import StockSelection from './components/StockSelection';
 import UserSubmissionComponent from './components/UserSubmissionComponent';
-import CashFlowProjectionsComponent from './components/CashFlowProjectionsComponent.js';
 import useChat from './hooks/useChat';
 
 function App() {
@@ -179,7 +179,7 @@ function App() {
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
             >
-              <CashFlowProjectionsComponent ticker={selectedStock.ticker} />
+              <CashFlowProjectionsComponent ticker={selectedStock.ticker}/>
             </SectionComponent>
           ) : (
             <SectionComponent

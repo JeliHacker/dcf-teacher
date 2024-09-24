@@ -27,9 +27,9 @@ const test = () => {
         }
 
         if(i === 3)
-            {
-              prompt = prompt + "Years: "+cachedData[i];
-            }
+        {
+            prompt = prompt + "Years: "+cachedData[i];
+        }
     }
 
     gemini.sendPrompt(prompt)
