@@ -5,7 +5,7 @@
 ## What is this?
 DCF Teacher is an online discounted cash flow (DCF) tutorial, which teaches users how to value a stock. DCF is the preferred financial model of famed investors such as Warren Buffett. By learning how to come to an intrinsic value for a company, we hope to give people an intellectual framework to make investment decisions, should they choose to invest in individual stocks.
 ## AfroTech AI Hackathon 2024
-We submitted DCF Teacher to the 2024 (AfroTech AI Hackathon)[https://afrotech.devpost.com/]. The hackathon gave participants the following instructions:
+We submitted DCF Teacher to the 2024 [AfroTech AI Hackathon](https://afrotech.devpost.com/). The hackathon gave participants the following instructions:
 ```
 Participants will be challenged to build or update a software application
 that integrates APIs from Google Gemini or OpenAI and fits into one of the following categories:
