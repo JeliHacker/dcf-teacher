@@ -4,7 +4,11 @@ import time
 
 ALTERNATIVE_KEYS = {
     'capital_expenditures': ['PaymentsToAcquirePropertyPlantAndEquipment', 'PaymentsForCapitalImprovements', 'PaymentsToAcquireProductiveAssets'],
-    'cash_flows_from_operations': ['NetCashProvidedByUsedInOperatingActivities', 'NetCashProvidedByUsedInOperatingActivitiesContinuingOperations']
+    'cash_flows_from_operations': ['NetCashProvidedByUsedInOperatingActivities', 'NetCashProvidedByUsedInOperatingActivitiesContinuingOperations'],
+    'long_term_debt': ['LongTermDebt', 'LongTermDebtNoncurrent', 'LongTermDebtAndCapitalLeaseObligations'],
+    'revenue': ['Revenues', 'RevenueFromContractWithCustomerExcludingAssessedTax', 'SalesRevenueNet', 'SalesRevenueServicesNet'],
+    'stock_repurchases': ['PaymentsForRepurchaseOfCommonStock', 'StockRepurchasedAndRetiredDuringPeriodValue'],
+    'cash_and_cash_equivalents': ['CashAndCashEquivalentsAtCarryingValue'],
 }
 
 def get_data_given_ticker_and_year_and_category(ticker, year, category):
@@ -38,6 +42,7 @@ def get_data_given_ticker_and_year_and_category(ticker, year, category):
     for key in alternative_keys:
         try:
             all_data_for_key = [fact for fact in company_facts['facts']['us-gaap'][key]['units']['USD'] if fact['form'] == '10-K']
+            print(all_data_for_key)
             all_data_for_key = [fact for fact in all_data_for_key if fact.get('frame', '').endswith(year)]
         except KeyError:
             print(f"KeyError for {key}")
@@ -49,4 +54,4 @@ def get_data_given_ticker_and_year_and_category(ticker, year, category):
 
 
 if __name__ == '__main__':
-    print(get_data_given_ticker_and_year_and_category('aapl', '2023', 'cash_flows_from_operations'))
+    print(get_data_given_ticker_and_year_and_category('aapl', '2023', 'cash_and_cash_equivalents'))
