@@ -5,7 +5,7 @@ import gemini from '../models/gemini.js';
 
 
 const test = () => {
-    const cachedData = JSON.parse(localStorage.getItem(`OriginalData`));
+    const cachedData = JSON.parse(localStorage.getItem(`financialDataAsText`));
 
     console.log("Line 38: " + cachedData);
     if (cachedData === null || cachedData === undefined) return;
@@ -27,9 +27,9 @@ const test = () => {
         }
 
         if(i === 3)
-            {
-              prompt = prompt + "Years: "+cachedData[i];
-            }
+        {
+            prompt = prompt + "Years: "+cachedData[i];
+        }
     }
 
     gemini.sendPrompt(prompt)
@@ -58,13 +58,14 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
         if (!ticker) return; // Exit early if no ticker is provided
 
         // Check localStorage for cached data
-        const cachedData = localStorage.getItem(`financialData_${ticker}`);
-        if (cachedData) {
-            setFinancialData(JSON.parse(cachedData));
-            // test();
-            setLoading(false);
-            return;
-        }
+        // const cachedData = localStorage.getItem(`financialData_${ticker}`);
+        // console.log("this is the cached data: " + localStorage.getItem(`financialData_${ticker}`));
+        // if (cachedData) {
+        //     setFinancialData(JSON.parse(cachedData));
+        //     // test();
+        //     setLoading(false);
+        //     return;
+        // }
 
         const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -73,8 +74,9 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
         axios.get(`${apiUrl}/api/financial-data?ticker=${ticker}`)
             .then(response => {
                 setFinancialData(response.data.fin_dict);
-                localStorage.setItem("OriginalData", JSON.stringify(response.data.original)); // Cache data in localStorage
+                localStorage.setItem("financialDataAsText", JSON.stringify(response.data.original)); // Cache data in localStorage
                 localStorage.setItem(`financialData_${ticker}`, JSON.stringify(response.data.fin_dict)); // Cache data in localStorage
+                localStorage.setItem(`ticker`, ticker);
                 setLoading(false);
             })
             .catch(error => {

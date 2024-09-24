@@ -177,11 +177,11 @@ def return_financial_data(ticker):
             # Stop once all three statements are processed
             if all(df is not None and not df.empty for df in financial_data.values()):
                 break
+
     docArray.append(years)
-    print("docArray: ", docArray)
     return [financial_data, docArray]
 
 
 if __name__ == "__main__":
 
-    financial_data = return_financial_data('aapl')
+    financial_data = return_financial_data('NKE')
