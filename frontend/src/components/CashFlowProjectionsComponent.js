@@ -1,6 +1,7 @@
 import {
     Slider,
     SliderFilledTrack,
+    SliderMark,
     SliderThumb,
     SliderTrack
 } from '@chakra-ui/react';
@@ -11,7 +12,10 @@ import { sendPrompt } from '../models/gemini';
 
 
 function CashFlowProjectionsComponent() {
-    const [data, setData] = useState('');
+    const [cashFlow, setCashFlow] = useState('');
+    const [growthRate, setGrowth] = useState(0);
+    const [discountRate, setDiscount] = useState(0);
+    const [dcf , setDCF] = useState('');
 
     const getData = async() =>
     {
@@ -42,26 +46,95 @@ function CashFlowProjectionsComponent() {
 
         const res = await sendPrompt(finalMessage);
 
-       setData(res);
+       setCashFlow(res);
     }
 
-    useEffect(()=>{getData()}, []);
+
+    const getDiscountedCashFlow = async() =>
+    {
+        const res = await sendPrompt(`Based on the discount rate: ${discountRate}, the most recent Free Cash Flows: ${cashFlow}, and the Terminal Growth rate: ${growthRate} calculate the discounted cash flow projecting over the next 20 years and give the final numeric result`);
+        setDCF(res);
+    }
+
+    useEffect(()=>{
+        getData();
+        getDiscountedCashFlow();
+    }, [discountRate, growthRate]);
+
+    const labelStyles = {
+        mt: '2',
+        ml: '-2.5',
+        fontSize: 'sm',
+      }
 
     return (
         <div>
-            Free Cash flow:
-            <Slider aria-label='slider-ex-1' defaultValue={30}>
-                <SliderTrack>
-                    <SliderFilledTrack />
+            Discount Rate:
+            <Slider defaultValue={0} min={0} max={15} step={3}onChange={(val) => 
+                {
+                    setDiscount(val);
+                }}>
+                <SliderMark value={3} {...labelStyles}>
+                    3%
+                </SliderMark>
+                <SliderMark value={6} {...labelStyles}>
+                    6%
+                </SliderMark>
+                <SliderMark value={9} {...labelStyles}>
+                    9%
+                </SliderMark>
+                <SliderMark value={12} {...labelStyles}>
+                    12%
+                </SliderMark>
+
+                <SliderMark value={15} {...labelStyles}>
+                    15%
+                </SliderMark>
+                <SliderTrack bg='red.100'>
+                    <SliderFilledTrack bg='tomato' />
                 </SliderTrack>
-                <SliderThumb />
+                <SliderThumb boxSize={6} />
             </Slider>
 
-            <p>
-                <ReactMarkdown>
-                    {data}
-                </ReactMarkdown>
-            </p>
+            Terminal Growth Rate:
+            <Slider defaultValue={0} min={0} max={15} step={3} onChange={(val) => 
+                {
+                    setGrowth(val);
+                }}>
+                <SliderMark value={3} {...labelStyles}>
+                    3%
+                </SliderMark>
+                <SliderMark value={6} {...labelStyles}>
+                    6%
+                </SliderMark>
+                <SliderMark value={9} {...labelStyles}>
+                    9%
+                </SliderMark>
+                <SliderMark value={12} {...labelStyles}>
+                    12%
+                </SliderMark>
+
+                <SliderMark value={15} {...labelStyles}>
+                    15%
+                </SliderMark>
+
+                <SliderTrack bg='red.100'>
+                    <SliderFilledTrack bg='tomato' />
+                </SliderTrack>
+                <SliderThumb boxSize={6} />
+            </Slider>
+
+                <p>
+                    <br/><br/>Free Cash flow:
+                    <ReactMarkdown>
+                        {cashFlow}
+                    </ReactMarkdown>
+                    
+                    <br/><br/>DCF:
+                    <ReactMarkdown>
+                        {dcf}
+                    </ReactMarkdown>
+                </p>
 
         </div>
     );
