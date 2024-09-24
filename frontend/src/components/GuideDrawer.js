@@ -31,6 +31,7 @@ const GuideDrawer = ({ currentSection, sections, navigateToSection }) => {
                 currentSection={currentSection}
                 sections={sections}
                 navigateToSection={navigateToSection}
+                onClose={onClose}
                  />
             </DrawerContent>
         </Drawer>

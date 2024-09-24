@@ -1,18 +1,20 @@
 .guide {
-    flex: 0 0 auto;
-    position: relative;
-    width: 75%;
-  }
-  
-  .guide ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .guide button {
-    padding: 5px;
-    margin-left: 5px;
-    margin-right: 5px;
-    width: 90%;
-    text-align: left;
-  }
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  position: relative;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.guide ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.guide button {
+  padding: 5px;
+  width: 90%;
+  text-align: left;
+}
