@@ -52,10 +52,10 @@ def get_data_given_ticker_and_year_and_category(ticker, year, category):
         try:
             if key in SHARES_KEYS:
                 all_data_for_key = [fact for fact in company_facts['facts']['us-gaap'][key]['units']['shares'] if fact['form'] == '10-K']
-                all_data_for_key = [fact for fact in all_data_for_key if fact.get('end', '').startswith(year)]
             else:
                 all_data_for_key = [fact for fact in company_facts['facts']['us-gaap'][key]['units']['USD'] if fact['form'] == '10-K']
-                all_data_for_key = [fact for fact in all_data_for_key if fact.get('frame', '').endswith(year)]
+            
+            all_data_for_key = [fact for fact in all_data_for_key if fact.get('end', '').startswith(year)]
                 
         except KeyError:
             print(f"KeyError for {key}")
@@ -68,4 +68,4 @@ def get_data_given_ticker_and_year_and_category(ticker, year, category):
 
 
 if __name__ == '__main__':
-    print(get_data_given_ticker_and_year_and_category('aapl', '2022', 'shares_outstanding'))
+    print(get_data_given_ticker_and_year_and_category('aapl', '2022', 'cash_flows_from_operations'))
