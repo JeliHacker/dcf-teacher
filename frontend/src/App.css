@@ -6,7 +6,6 @@
   
 }
 
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -53,11 +52,6 @@ h2 {
    width: 100%;
   /* width:fit-content */
 }
-
-/* .Panel2 .GuideDrawer
-{
-  position: absolute;
-} */
 
 .Panel2 tbody tr:nth-child(odd) {
   background-color: #cbeefe; /* Light grey background */

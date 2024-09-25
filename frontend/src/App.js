@@ -72,6 +72,13 @@ function App() {
       <div className="App">
         <div className='right-column'>
           <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-around' }}>
+            <GuideDrawer
+              className="GuideDrawer"
+              currentSection={currentSection}
+              sections={sections}
+              navigateToSection={navigateToSection}
+            />
+
             <ChatDrawer
               chatHistory={chatHistory}
               isLoading={isLoading}
@@ -79,13 +86,6 @@ function App() {
               setUserMessage={setUserMessage}
               sendMessage={sendMessage}
               ticker={selectedStock !== null ? selectedStock.ticker : ''}
-            />
-
-            <GuideDrawer
-              className="GuideDrawer"
-              currentSection={currentSection}
-              sections={sections}
-              navigateToSection={navigateToSection}
             />
           </div>
           <hr className='separator' />
@@ -179,7 +179,7 @@ function App() {
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
             >
-              <CashFlowProjectionsComponent ticker={selectedStock.ticker}/>
+              <CashFlowProjectionsComponent ticker={selectedStock.ticker} />
             </SectionComponent>
           ) : (
             <SectionComponent

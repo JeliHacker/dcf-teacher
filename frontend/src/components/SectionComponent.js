@@ -12,7 +12,7 @@ function SectionComponent({ title, children, onComplete, completed, sectionIndex
           </Button>
         )}
 
-        <h2 style={{ marginLeft: '10px', marginRight: '10px' }}>{title}</h2>
+        <h2 style={{ marginLeft: '10px', marginRight: '10px', width:'50%' }}>{title}</h2>
 
         <Button
           onClick={() => onComplete(sectionIndex)}
