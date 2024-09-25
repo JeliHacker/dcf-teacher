@@ -1,8 +1,15 @@
 import re
 import json
-import os
+from pymongo import MongoClient
+from pymongo.errors import DuplicateKeyError
 
-def chunk_10k_file(file_path, output_json_path, document_id, overlap_chars=1000):
+# MongoDB connection for local instance
+uri = "mongodb://localhost:27017/"  # Local MongoDB URI
+client = MongoClient(uri)  # No need for ServerApi when connecting locally
+db = client['chunkStore']  # Replace with your database name
+chunks_collection = db['chunks']   # Replace with your collection name
+
+def chunk_10k_file(file_path, document_id, overlap_chars=1000):
     with open(file_path, 'r', encoding='utf-8') as file:
         content = file.read()
 
@@ -30,58 +37,66 @@ def chunk_10k_file(file_path, output_json_path, document_id, overlap_chars=1000)
         ("Principal Accounting Fees and Services", r"(?i)Item 14\.\s"),
         ("Exhibits, Financial Statement Schedules", r"(?i)Item 15\.\s")
     ]
+
     # Find the start positions of each section
     positions = []
     for section_name, pattern in sections:
         match = re.search(pattern, content)
         if match:
-            item_id = re.search(r"Item (\d+[A-Za-z]?)", pattern).group(1)
+            item_id_match = re.search(r"Item (\d+[A-Za-z]?)", pattern)
+            item_id = item_id_match.group(1) if item_id_match else f"Unknown_{section_name}"
             positions.append((section_name, item_id, match.start()))
-
 
     # Sort positions by their occurrence in the document
     positions.sort(key=lambda x: x[2])
-    chunks = []
+
+    # Dictionary to hold chunks under document_id
+    result = {
+        "_id": document_id,  # Use document_id as MongoDB _id
+        "chunks": []  # List of chunks
+    }
     chunk_id = 1  # Initialize chunk ID
-    
+
     # Create chunks with overlap
     for i in range(len(positions)):
         start = positions[i][2]  # Start from the section's start position
         end = positions[i+1][2] if i+1 < len(positions) else len(content)  # Until the next section or end of content
-        
-        # Add overlap to the next chunk if not the last chunk
-        if i < len(positions) - 1:
-            end_with_overlap = min(end + overlap_chars, len(content))
-        else:
-            end_with_overlap = end
 
-        chunk_content = content[start:end_with_overlap].strip()
+        chunk_content = content[start:end].strip()
 
-        # Add overlap from previous chunk to current chunk
+        # Initialize context as an empty string
+        context = ""
+
+        # Add context from the previous chunk
         if i > 0:
-            overlap_start = max(0, start - overlap_chars)
-            overlap_text = content[overlap_start:start].strip()
-            chunk_content = f"[PREVIOUS CONTEXT START]\n{overlap_text}\n[PREVIOUS CONTEXT END]\n\n{chunk_content}"
+            prev_start = positions[i-1][2]
+            prev_end = start
+            prev_content = content[prev_start:prev_end]
 
-        # Prepare chunk for JSON
-        chunks.append({
+            sentences = re.findall(r'[^.!?]+[.!?]', prev_content)
+            if sentences:
+                context = ' '.join(sentences[-3:]).strip()  # Use last 3 sentences or fewer
+
+        # Append chunk to the result dictionary under the document ID
+        result["chunks"].append({
             "chunkID": f"{document_id}_chunk_{chunk_id}",
-            "documentID": document_id,
             "title": positions[i][0],  # Section title
-            "itemID": positions[i][1],  # Item number from the regex
+            "itemID": positions[i][1],  # Item ID
+            "context": context,  # Add the context from the previous chunk
             "content": chunk_content
         })
 
         chunk_id += 1  # Increment chunk ID
 
-    # Write chunks to JSON file
-    with open(output_json_path, 'w', encoding='utf-8') as json_file:
-        json.dump(chunks, json_file, indent=4)
-
-    print(f"Chunking complete. Chunks saved to {output_json_path}")
+    # Insert the entire document with chunks into MongoDB
+    try:
+        chunks_collection.insert_one(result)
+    except DuplicateKeyError:
+        print(f"Document with _id {document_id} already exists. Skipping...")
+    else:
+        print(f"Document with _id {document_id} has been stored in MongoDB.")
 
 # Usage
-file_path = "./extracted_sections_google.txt"
-output_json_path = "./my_chunks_google.json"
+file_path = "./extracted_sections_apple.txt"
 document_id = "AAPL_2023_10K"
-chunk_10k_file(file_path, output_json_path, document_id)
+chunk_10k_file(file_path, document_id)
