@@ -1,13 +1,15 @@
 import requests
 import csv
-from helpers import convert_csv_to_txt
 import time
 import os
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv, find_dotenv
 import pandas as pd
-load_dotenv(find_dotenv())
+from typing import List, Dict, Optional
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 
+load_dotenv(find_dotenv())
 
 HEADERS = {'User-Agent': os.getenv('USER_AGENT')}
 BASE_URL = "https://www.sec.gov/Archives/edgar/data"
@@ -17,21 +19,40 @@ FINANCIAL_STATEMENT_KEYWORDS = {
     'cash_flow_statement': ['Cash Flow Statement', 'Statement of Cash Flows', 'Statements of Cash Flows']
 }
 
-def get_cik_from_symbol(stock_symbol, add_zeroes: bool = False):
+def get_cik_from_symbol(stock_symbol: str, add_zeroes: bool = False) -> Optional[str]:
+    """
+    Retrieves the CIK (Central Index Key) for a given stock symbol from the 'all_tickers.txt' file.
+
+    Args:
+        stock_symbol (str): The stock symbol to retrieve the CIK for.
+        add_zeroes (bool, optional): Whether to add leading zeroes to the CIK. Defaults to False.
+
+    Returns:
+        Optional[str]: The CIK for the given stock symbol, or None if not found.
+    """
     all_tickers_file_path = os.path.join(os.path.dirname(__file__), 'all_tickers.txt')
     with open(all_tickers_file_path, 'r') as file:
         for line in file:
             parts = line.strip().split(', ')
             if len(parts) >= 4 and parts[1] == stock_symbol:
-                if add_zeroes:
-                    return parts[2].zfill(10)
-                else:
-                    return parts[2]
+                return parts[2].zfill(10) if add_zeroes else parts[2]
     print(f"Error in get_cik_from_symbol. Could not find a CIK for that stock ticker, {stock_symbol}.")
     return None
 
 
-def get_all_tickers():
+def get_all_tickers(): 
+    """
+    Retrieves all company tickers from the SEC website and writes them to a CSV and TXT file.
+
+    The function sends a GET request to the SEC website to retrieve a JSON object containing all company tickers.
+    It then writes this data to a CSV file and converts the CSV file to a TXT file.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
     # get all companies data
     company_tickers = requests.get(
         "https://www.sec.gov/files/company_tickers.json",
@@ -48,60 +69,62 @@ def get_all_tickers():
     convert_csv_to_txt(all_tickers_csv_file_path, all_tickers_txt_file_path)
 
 
-def get_10k_filings(cik):
+def get_10k_filings(cik: str) -> List[Dict[str, str]]:
     """
-    Gets data about the 10-K filings for a company.
-    Returns a list of dictionaries.
+    Retrieves a list of 10-K filings for a company with the given CIK.
+
+    Args:
+        cik (str): The Central Index Key of the company.
+
+    Returns:
+        List[Dict[str, str]]: A list of dictionaries containing information about each 10-K filing.
     """
-    # Fetch the company's submissions
     submissions_url = f"https://data.sec.gov/submissions/CIK{cik}.json"
     response = requests.get(submissions_url, headers=HEADERS)
     time.sleep(0.11)
     data = response.json()
     filings = data['filings']['recent']
-
-    indices_10Ks = []
-    i = 0
-    for form in filings['form']:
-        if form == "10-K":
-            indices_10Ks.append(i)
-        i += 1
+    
+    indices_10Ks = [i for i, form in enumerate(filings['form']) if form == "10-K"]
 
     filings_10Ks = []
-    # Construct URLs for 10-K filings
-    filing_urls = []
-    i = 0
-
     for index in indices_10Ks:
-        form_info_dict = {}
-        for key in data['filings']['recent']:
-            key_data_at_index = data['filings']['recent'][key][index]
-            form_info_dict[key] = key_data_at_index
-
+        form_info_dict = {key: data['filings']['recent'][key][index] for key in data['filings']['recent']}
         filings_10Ks.append(form_info_dict)
         
     return filings_10Ks
 
 
-def get_financial_statements_urls_given_accession_number(accession_number, cik):
-    urls = []
-    for i in range(1, 10):
-        url = f"https://www.sec.gov/Archives/edgar/data/{cik.lstrip('0')}/{accession_number.replace('-', '')}/R{i}.htm"
-        response = requests.get(url=url, headers=HEADERS)
-        urls.append(url)
-        time.sleep(0.11)
+def get_financial_statements_urls_given_accession_number(accession_number: str, cik: str) -> List[str]:
+    """
+    Retrieves a list of URLs for financial statements given an accession number and a CIK.
 
+    Args:
+        accession_number (str): The accession number of the financial statement.
+        cik (str): The Central Index Key of the company.
+
+    Returns:
+        List[str]: A list of URLs for the financial statements.
+    """
+    urls = [f"https://www.sec.gov/Archives/edgar/data/{cik.lstrip('0')}/{accession_number.replace('-', '')}/R{i}.htm" for i in range(1, 10)]
+    for url in urls:
+        requests.get(url=url, headers=HEADERS)
+        time.sleep(0.11)
     return urls
 
 
+def identify_statement(title: str) -> Optional[str]:
+    """
+    Identify the type of financial statement based on the title.
 
+    Args:
+        title (str): The title of the financial statement.
 
-
-
-def identify_statement(title):
-    """Identify the type of financial statement based on the title."""
+    Returns:
+        Optional[str]: The type of financial statement if found, None otherwise.
+    """
     title_lower = title.lower()
-    if ('parenthetical' in title_lower):
+    if 'parenthetical' in title_lower:
         return None
     for statement, keywords in FINANCIAL_STATEMENT_KEYWORDS.items():
         if any(keyword.lower() in title_lower for keyword in keywords):
@@ -109,18 +132,29 @@ def identify_statement(title):
     return None
 
 
-def return_financial_data(ticker):
+# @app.get("/financial-data/{ticker}", response_model=FinancialDataResponse)
+def return_financial_data(ticker: str):
     """
-    Process multiple financial statements (Income Statement, Balance Sheet, Cash Flow Statement)
-    from the SEC archive and return them.
+    Retrieves the financial data for a given company ticker symbol.
+
+    Args:
+        ticker (str): The company ticker symbol.
+
+    Returns:
+        dict: A dictionary containing the financial data, including income statement, balance sheet, and cash flow statement.
+
+    Raises:
+        HTTPException: If the company CIK is not found or if no 10-K filings are found.
     """
     COMPANY_CIK = get_cik_from_symbol(ticker.upper(), add_zeroes=True)
+    if not COMPANY_CIK:
+        raise HTTPException(status_code=404, detail="Company CIK not found")
+
     filings = get_10k_filings(cik=COMPANY_CIK)
-    
     if not filings:
-        return 
+        raise HTTPException(status_code=404, detail="No 10-K filings found")
     
-    most_recent_10k = filings[0] #3 
+    most_recent_10k = filings[0]
     sections_urls = get_financial_statements_urls_given_accession_number(most_recent_10k['accessionNumber'], cik=COMPANY_CIK)
 
     financial_data = {
@@ -129,8 +163,6 @@ def return_financial_data(ticker):
         'cash_flow_statement': None
     }
 
-    i = 1
-    docArray = []
     for url in sections_urls:
         response = requests.get(url=url, headers=HEADERS)
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -139,49 +171,29 @@ def return_financial_data(ticker):
         title_element = first_table.find('th')
         title = title_element.get_text(strip=True) if title_element else ""
 
-        # Identify the statement based on the title
         statement_type = identify_statement(title)
         if statement_type:
-            print(f"Processing {statement_type} from {url}")
             header = first_table.find_all('th')[1:]  
-
             years = [h.text.strip() for h in header]
 
-            # Extract the data rows (each financial entry)
-            rows = first_table.find_all('tr')[1:]  # Skipping the header rows
+            rows = first_table.find_all('tr')[1:]
             data = []
-            doc = ""
 
             for row in rows:
                 columns = row.find_all('td')
                 if len(columns) > 1:
-                    # Extract label and values for each year
                     label = columns[0].text.strip()
                     values = [col.text.strip() for col in columns[1:]]
                     data.append([label] + values)
-    
-            for fin in data:
-                for line in fin:
-                    doc = doc + line+"\n"
-            docArray.append(doc)
 
             if "Months Ended" in years[0]:
                 years.pop(0)
             
             df = pd.DataFrame(data, columns=['Metric'] + years)
 
-            # Store the DataFrame in the corresponding key in the dictionary
-            financial_data[statement_type] = df
-            # print(f"Extracted {statement_type} data:\n", df)
+            financial_data[statement_type] = df.to_dict(orient="records")
 
-            # Stop once all three statements are processed
             if all(df is not None and not df.empty for df in financial_data.values()):
                 break
 
-    docArray.append(years)
-    return [financial_data, docArray]
-
-
-if __name__ == "__main__":
-
-    financial_data = return_financial_data('NKE')
+    return financial_data

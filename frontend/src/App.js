@@ -1,19 +1,23 @@
+import { ChakraProvider } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import GuideComponent from './components/GuideComponent';
+import './App.css';
+import CashFlowProjectionsComponent from './components/CashFlowProjectionsComponent.js';
+import ChatDrawer from './components/ChatDrawer.js';
+import FinancialStatements from './components/FinancialStatements';
+import GuideDrawer from './components/GuideDrawer';
+import InstructionsComponent from './components/InstructionsComponent';
+import IntroSection from './components/IntroSection';
 import SectionComponent from './components/SectionComponent';
 import StockSelection from './components/StockSelection';
-import FinancialStatements from './components/FinancialStatements';
-import TeacherChat from './components/TeacherChat';
-import './App.css';
-import InstructionsComponent from './components/InstructionsComponent';
 import UserSubmissionComponent from './components/UserSubmissionComponent';
 import useChat from './hooks/useChat';
-import { ChakraProvider } from '@chakra-ui/react'
 
 function App() {
   const [currentSection, setCurrentSection] = useState(0);
   const [selectedStock, setSelectedStock] = useState(null);
+  const [selectedStockTicker, setSelectedStockTicker] = useState(null);
   const [sections, setSections] = useState([
+    { title: 'Step 0: Introduction', content: 'Welcome to DCF Teacher!', unlocked: true, completed: true },
     { title: 'Step 1: Select a Company', content: 'Select a company to analyze.', unlocked: true, completed: false },
     { title: 'Step 2: Gather Data', content: 'Gather financial data for the selected company.', unlocked: false, completed: false },
     { title: 'Step 3: Calculate Free Cash Flow', content: 'Calculate the Free Cash Flow.', unlocked: false, completed: false },
@@ -24,6 +28,7 @@ function App() {
   const { chatHistory, isLoading, userMessage, setUserMessage, sendMessage } = useChat();
 
   const completeSection = () => {
+    console.log("completeSection");
     const updatedSections = sections.map((section, index) => {
       if (index === currentSection) {
         return { ...section, completed: true };
@@ -40,7 +45,7 @@ function App() {
     setCurrentSection(index);
   };
 
-  const handleStockSelect = (stockName) => {
+  const handleStockSelect = (stockTicker) => {
     // Assuming that you have a way to determine the CIK and accession number based on the selected stock
     const stockDetails = {
       'aapl': { cik: '0000320193', accessionNumber: '0000320193-21-000065', ticker: 'aapl' },
@@ -49,9 +54,10 @@ function App() {
     };
 
     console.log("handleStockSelect");
-    setSelectedStock(stockDetails[stockName]);
-    let message = `I want to analyze ${stockName}.`;
-    sendMessage(message);
+    setSelectedStock(stockDetails[stockTicker]);
+    setSelectedStockTicker(stockTicker);
+    let message = `I want to analyze ${stockTicker}.`;
+    sendMessage(message, stockTicker);
     console.log("i tried to send the message");
     completeSection();
   };
@@ -64,11 +70,27 @@ function App() {
 
     <ChakraProvider>
       <div className="App">
-        <GuideComponent
-          currentSection={currentSection}
-          sections={sections}
-          navigateToSection={navigateToSection}
-        />
+        <div className='right-column'>
+          <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-around' }}>
+            <ChatDrawer
+              chatHistory={chatHistory}
+              isLoading={isLoading}
+              userMessage={userMessage}
+              setUserMessage={setUserMessage}
+              sendMessage={sendMessage}
+              ticker={selectedStock !== null ? selectedStock.ticker : ''}
+            />
+
+            <GuideDrawer
+              className="GuideDrawer"
+              currentSection={currentSection}
+              sections={sections}
+              navigateToSection={navigateToSection}
+            />
+          </div>
+          <hr className='separator' />
+          <UserSubmissionComponent currentSection={currentSection} sections={sections} onSubmit={onSubmitAnswers} selectedStockTicker={selectedStockTicker} />
+        </div>
         <div className="Panel2">
 
           {currentSection === 0 ? (
@@ -76,31 +98,52 @@ function App() {
               title={sections[currentSection].title}
               onComplete={completeSection}
               completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
+            >
+
+              <IntroSection
+                title={sections[currentSection].title}
+                onComplete={completeSection}
+                completed={sections[currentSection].completed}
+              />
+            </SectionComponent>
+          ) : currentSection === 1 ? (
+            <SectionComponent
+              title={sections[currentSection].title}
+              onComplete={completeSection}
+              completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
             >
               <StockSelection onSelectStock={handleStockSelect} />
             </SectionComponent>
-          ) : currentSection === 1 && selectedStock ? (
-            <SectionComponent
-              title={sections[currentSection].title}
-              onComplete={completeSection}
-              completed={sections[currentSection].completed}
-            >
-              <InstructionsComponent text="Gather financial data for the selected company." />
-              <FinancialStatements
-                cik={selectedStock.cik}
-                accessionNumber={selectedStock.accessionNumber}
-                ticker={selectedStock.ticker}
-                onComplete={completeSection}
-              />
-
-            </SectionComponent>
-
           ) : currentSection === 2 && selectedStock ? (
             <SectionComponent
               title={sections[currentSection].title}
+              onComplete={completeSection}
+              completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
+            >
+              <InstructionsComponent text='The "cash flows" in discounted cash flows are free cash flow. Free cash flow is cash the company is bringin in minus any capital expenditures.' />
+              <FinancialStatements
+                cik={selectedStock.cik}
+                accessionNumber={selectedStock.accessionNumber}
+                ticker={selectedStock.ticker}
+                onComplete={completeSection}
+              />
+
+            </SectionComponent>
+
+          ) : currentSection === 3 && selectedStock ? (
+            <SectionComponent
+              title={sections[currentSection].title}
               content={sections[currentSection].content}
               onComplete={completeSection}
               completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
             >
               <InstructionsComponent text="Now, get the operating cash flows and the capital expenditures for each of the past 10 years." />
               <FinancialStatements
@@ -110,12 +153,14 @@ function App() {
                 onComplete={completeSection}
               />
             </SectionComponent>
-          ) : currentSection === 3 && selectedStock ? (
+          ) : currentSection === 4 && selectedStock ? (
             <SectionComponent
-              title={'poop'}
+              title={sections[currentSection].title}
               content={sections[currentSection].content}
               onComplete={completeSection}
               completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
             >
               <InstructionsComponent text="Now, get the operating cash flows and the capital expenditures for each of the past 10 years." />
               <FinancialStatements
@@ -124,6 +169,17 @@ function App() {
                 ticker={selectedStock.ticker}
                 onComplete={completeSection}
               />
+            </SectionComponent>
+          ) : currentSection === 5 && selectedStock ? (
+            <SectionComponent
+              title={sections[currentSection].title}
+              content={sections[currentSection].content}
+              onComplete={completeSection}
+              completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
+            >
+              <CashFlowProjectionsComponent ticker={selectedStock.ticker}/>
             </SectionComponent>
           ) : (
             <SectionComponent
@@ -131,19 +187,10 @@ function App() {
               content={sections[currentSection].content}
               onComplete={completeSection}
               completed={sections[currentSection].completed}
+              sectionIndex={currentSection}
+              navigateToSection={navigateToSection}
             />
           )}
-        </div>
-        <div className='right-column'>
-          <TeacherChat
-            chatHistory={chatHistory}
-            isLoading={isLoading}
-            userMessage={userMessage}
-            setUserMessage={setUserMessage}
-            sendMessage={sendMessage}
-          />
-          <hr className="separator" />
-          <UserSubmissionComponent currentSection={currentSection} sections={sections} onSubmit={onSubmitAnswers} />
         </div>
       </div>
     </ChakraProvider>

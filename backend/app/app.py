@@ -115,7 +115,7 @@ def submit_open_response_answer():
     # correct_category = data['correctCategory']  # The correct category for the financial statement
     
     prompt = f"You just asked the following question: {question}. My answer was '{user_answer}'."
-    prompt += "Based on the financial data provided, can you evaluate my answer, telling me if I'm right, or explaining in a few sentences why I'm wrong? Keep in mind that my answer might be incorrect. Tell me if I'm wrong."
+    prompt += "Based on the financial data provided, can you evaluate my answer, telling me if I'm right, or explaining in a few sentences why I'm wrong?"
     prompt += "Financial data is as follows. For each category, the first number corresponds to 2023, the second number is 2022, and the third (if there is one) is for 2021. \n" 
     prompt += financial_data 
     print("The prompt is: ", prompt)
@@ -124,26 +124,6 @@ def submit_open_response_answer():
     print(f"type(response): {type(response)}")
     
     return response.text
-
-@app.route('/api/sec_api', methods=['GET'])
-def get_operating_cash_flows():
-    """_summary_
-
-    Returns:
-        _type_: _description_
-    """
-    print('Received request at /api/sec_api')
-    # The question (or prompt, etc)
-    # the financial data (what we have)
-    # the user's answer
-    
-    stock_ticker = request.args.get('stock_ticker')
-    year = request.args.get('year')
-    category = request.args.get('category')
-    
-    print("api/sec_api: ", stock_ticker, year, category)
-    
-    return jsonify({'message': 6969})
 
 
 if __name__ == "__main__":

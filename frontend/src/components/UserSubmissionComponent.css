@@ -6,16 +6,11 @@
 	overflow-y: auto;
 }
 
-@keyframes glow {
-	from {
-		box-shadow: 0 0 15px - 15px #aef4af;
-	}
-
-	to {
-		box-shadow: 0 0 15px 15px #aef4af;
-	}
+.input-box {
+	margin-left: 10px;
+	width: 150px;
+	text-align: center;
 }
-
 
 .highlight {
 	background-color: green !important;

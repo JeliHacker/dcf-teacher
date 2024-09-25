@@ -1,28 +1,33 @@
-import { Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Box } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import React from 'react';
+import './GuideComponent.css';
 
-function GuideComponent({ currentSection, sections, navigateToSection }) {
+function GuideComponent({ currentSection, sections, navigateToSection, onClose }) {
   return (
     <div className="guide">
       <h2>Guide</h2>
-      <Accordion allowToggle>
+      <hr className='separator'/>
+      <ul style={{ listStyleType: 'none', padding: 0 }}>
         {sections.map((section, index) => (
-          <AccordionItem key={index} isDisabled={!section.unlocked}>
-            <h2>
-              <AccordionButton onClick={() => navigateToSection(index)}>
-                <Box flex="1" textAlign="left" fontWeight={currentSection === index ? 'bold' : 'normal'}>
-                  {section.title}
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
-            <AccordionPanel>
-              {/* Add content related to the section here if needed */}
-              <p>{section.description}</p> {/* Optional */}
-            </AccordionPanel>
-          </AccordionItem>
+          <li key={index} style={{ marginBottom: '10px' }}>
+            <Button
+              variant="outline"
+              onClick={() => {navigateToSection(index); onClose();}}
+              isDisabled={!section.unlocked}
+              fontWeight={currentSection === index ? 'bold' : 'normal'}
+              colorScheme={currentSection === index ? 'blue' : 'gray'}
+              width="100%"
+              height="50px"
+              justifyContent="flex-start"
+              whiteSpace="normal"
+              padding="1rem"
+              textAlign="left"
+            >
+              {section.title}
+            </Button>
+          </li>
         ))}
-      </Accordion>
+      </ul>
     </div>
   );
 }

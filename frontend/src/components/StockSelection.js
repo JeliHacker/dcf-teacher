@@ -2,6 +2,7 @@ import React from 'react';
 import appleLogo from '../assets/aapl.png';
 import teslaLogo from '../assets/tsla.png';
 import nikeLogo from '../assets/nke.png';
+import './StockSelection.css';
 
 function StockSelection({ onSelectStock }) {
   const stocks = [
@@ -16,8 +17,10 @@ function StockSelection({ onSelectStock }) {
       <div className="stocks">
         {stocks.map((stock, index) => (
           <div key={index} className="stock" onClick={() => onSelectStock(stock.ticker)}>
-            <img src={stock.logo} alt={stock.name} className="stock-logo" />
-            <p>{stock.name}</p>
+            <div className="stock-logo-container">
+              <img src={stock.logo} alt={stock.name} className="stock-logo" />
+            </div>
+            <p className="stock-title">{stock.name}</p>
           </div>
         ))}
       </div>
