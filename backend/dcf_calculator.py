@@ -9,9 +9,6 @@ import os
 
 HEADERS = {'User-Agent': os.getenv('USER_AGENT')}
 COMPANY_TICKER = "AAPL"
-print(get_cik_from_symbol('AAPL'))
-# get company facts data
-
 
 
 

@@ -108,10 +108,10 @@ class TestGetDataGivenTickerAndYearAndAlternativeKeys(unittest.TestCase):
         mock_response.json.return_value = {
             'facts': {
                 'us-gaap': {
-                    'PaymentsToAcquirePropertyPlantAndEquipment': {
+                    'NetCashProvidedByUsedInOperatingActivities': {
                         'units': {
                             'USD': [
-                                {'form': '10-K', 'frame': 'CY2022', 'val': 122151000000}
+                                {'form': '10-K', 'frame': 'CY2022', 'val': 122151000000, 'end': '2022-09-24'}
                             ]
                         }
                     }

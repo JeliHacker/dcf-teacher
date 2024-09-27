@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import useQuestion from '../hooks/useQuestion';
 import './UserSubmissionComponent.css';
 
-function UserInputComponent({ currentSection, onSubmit }) {
+function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
   const [hasFocused, setHasFocused] = useState(false);
 
   // Destructure from useQuestion to get question data, loading state, etc.
@@ -159,13 +159,17 @@ function UserInputComponent({ currentSection, onSubmit }) {
             />
           </div>
           <button
-            onClick={() => handleOpenResponseAnswerSubmit(
+            onClick={() => { 
+              handleOpenResponseAnswerSubmit(
               'open response',
               'Find the following data for 2023: Operating Cash Flows and Capital Expenditures',
               {
                 'operatingCashFlow': operatingCashFlow,
                 'capitalExpenditures': capitalExpenditures
-              })}
+              });
+
+              setSectionCompleted(true);
+            }}
             style={{
               backgroundColor: 'green',
               color: 'white',
@@ -224,10 +228,14 @@ function UserInputComponent({ currentSection, onSubmit }) {
             />
           </div>
           <button
-            onClick={() => handleOpenResponseAnswerSubmit('open response', {
+            onClick={() => { 
+              handleOpenResponseAnswerSubmit('open response', {
               'operatingCashFlow': operatingCashFlow,
               'capitalExpenditures': capitalExpenditures
-            })}
+              });
+
+              setSectionCompleted(true);
+          }}
             style={{
               backgroundColor: 'green',
               color: 'white',

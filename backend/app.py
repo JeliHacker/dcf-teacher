@@ -4,6 +4,7 @@ import os
 import requests
 import google.generativeai as genai
 from annual_report_data import return_financial_data
+from sec_api import get_data_given_ticker_and_year_and_category
 import gemini_model
 
 app = Flask(__name__)
@@ -137,13 +138,15 @@ def get_operating_cash_flows():
     # the financial data (what we have)
     # the user's answer
     
-    stock_ticker = request.args.get('stock_ticker')
+    ticker = request.args.get('ticker')
     year = request.args.get('year')
     category = request.args.get('category')
     
-    print("api/sec_api: ", stock_ticker, year, category)
+    print("api/sec_api: ", ticker, year, category)
     
-    return jsonify({'message': 6969})
+    value = get_data_given_ticker_and_year_and_category(ticker, year, category)
+    
+    return jsonify({category: value})
 
 
 if __name__ == "__main__":
