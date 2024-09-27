@@ -16,6 +16,7 @@ function App() {
   const [currentSection, setCurrentSection] = useState(0);
   const [selectedStock, setSelectedStock] = useState(null);
   const [selectedStockTicker, setSelectedStockTicker] = useState(null);
+  const [sectionCompleted, setSectionCompleted] = useState(false);
   const [sections, setSections] = useState([
     { title: 'Step 0: Introduction', content: 'Welcome to DCF Teacher!', unlocked: true, completed: true },
     { title: 'Step 1: Select a Company', content: 'Select a company to analyze.', unlocked: true, completed: false },
@@ -53,12 +54,10 @@ function App() {
       'nke': { cik: '0000320187', accessionNumber: '0000320187-21-000056', ticker: 'nke' },
     };
 
-    console.log("handleStockSelect");
     setSelectedStock(stockDetails[stockTicker]);
     setSelectedStockTicker(stockTicker);
     let message = `I want to analyze ${stockTicker}.`;
-    sendMessage(message, stockTicker);
-    console.log("i tried to send the message");
+    sendMessage(message, stockTicker);  
     completeSection();
   };
 
@@ -67,7 +66,6 @@ function App() {
   };
 
   return (
-
     <ChakraProvider>
       <div className="App">
         <div className='right-column'>
@@ -78,7 +76,6 @@ function App() {
               sections={sections}
               navigateToSection={navigateToSection}
             />
-
             <ChatDrawer
               chatHistory={chatHistory}
               isLoading={isLoading}
@@ -89,19 +86,26 @@ function App() {
             />
           </div>
           <hr className='separator' />
-          <UserSubmissionComponent currentSection={currentSection} sections={sections} onSubmit={onSubmitAnswers} selectedStockTicker={selectedStockTicker} />
+          <UserSubmissionComponent
+            currentSection={currentSection}
+            sections={sections}
+            onSubmit={onSubmitAnswers}
+            selectedStockTicker={selectedStockTicker}
+            setSectionCompleted={setSectionCompleted}
+          />
         </div>
         <div className="Panel2">
 
           {currentSection === 0 ? (
             <SectionComponent
               title={sections[currentSection].title}
+              content={sections[currentSection].content}
               onComplete={completeSection}
-              completed={sections[currentSection].completed}
+              completed={sectionCompleted}
+              setSectionCompleted={setSectionCompleted}
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
             >
-
               <IntroSection
                 title={sections[currentSection].title}
                 onComplete={completeSection}
@@ -111,8 +115,10 @@ function App() {
           ) : currentSection === 1 ? (
             <SectionComponent
               title={sections[currentSection].title}
+              content={sections[currentSection].content}
               onComplete={completeSection}
-              completed={sections[currentSection].completed}
+              completed={sectionCompleted}
+              setSectionCompleted={setSectionCompleted}
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
             >
@@ -121,8 +127,10 @@ function App() {
           ) : currentSection === 2 && selectedStock ? (
             <SectionComponent
               title={sections[currentSection].title}
+              content={sections[currentSection].content}
               onComplete={completeSection}
-              completed={sections[currentSection].completed}
+              completed={sectionCompleted}
+              setSectionCompleted={setSectionCompleted}
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
             >
@@ -135,13 +143,13 @@ function App() {
               />
 
             </SectionComponent>
-
           ) : currentSection === 3 && selectedStock ? (
             <SectionComponent
               title={sections[currentSection].title}
               content={sections[currentSection].content}
               onComplete={completeSection}
-              completed={sections[currentSection].completed}
+              completed={sectionCompleted}
+              setSectionCompleted={setSectionCompleted}
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
             >
@@ -158,7 +166,8 @@ function App() {
               title={sections[currentSection].title}
               content={sections[currentSection].content}
               onComplete={completeSection}
-              completed={sections[currentSection].completed}
+              completed={sectionCompleted}
+              setSectionCompleted={setSectionCompleted}
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
             >
@@ -175,7 +184,8 @@ function App() {
               title={sections[currentSection].title}
               content={sections[currentSection].content}
               onComplete={completeSection}
-              completed={sections[currentSection].completed}
+              completed={sectionCompleted}
+              setSectionCompleted={setSectionCompleted}
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
             >
@@ -187,6 +197,7 @@ function App() {
               content={sections[currentSection].content}
               onComplete={completeSection}
               completed={sections[currentSection].completed}
+              setSectionCompleted={setSectionCompleted}
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
             />
@@ -194,7 +205,6 @@ function App() {
         </div>
       </div>
     </ChakraProvider>
-
   );
 }
 

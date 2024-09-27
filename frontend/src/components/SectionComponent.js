@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@chakra-ui/react';
 
-function SectionComponent({ title, children, onComplete, completed, sectionIndex, navigateToSection }) {
+function SectionComponent({ title, children, onComplete, completed, setSectionCompleted, sectionIndex, navigateToSection }) {
   return (
     <div className="section">
       <div className="section-header" style={{ display: 'flex', justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
@@ -15,7 +15,10 @@ function SectionComponent({ title, children, onComplete, completed, sectionIndex
         <h2 style={{ marginLeft: '10px', marginRight: '10px', width:'50%' }}>{title}</h2>
 
         <Button
-          onClick={() => onComplete(sectionIndex)}
+          onClick={() => {
+            onComplete(sectionIndex);
+            setSectionCompleted(false);
+          }}
           isDisabled={!completed}
         >
           Next→
