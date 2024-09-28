@@ -107,11 +107,7 @@ function App() {
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
             >
-              <IntroSection
-                title={sections[currentSection].title}
-                onComplete={completeSection}
-                completed={sections[currentSection].completed}
-              />
+              <InstructionsComponent text='The "cash flows" in discounted cash flows are free cash flow. Free cash flow is cash the company is bringin in minus any capital expenditures.' />
             </SectionComponent>
           ) : currentSection === 1 ? (
             <SectionComponent
@@ -151,14 +147,12 @@ function App() {
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
             >
-              <InstructionsComponent text='The "cash flows" in discounted cash flows are free cash flow. Free cash flow is cash the company is bringin in minus any capital expenditures.' />
               <FinancialStatements
                 cik={selectedStock.cik}
                 accessionNumber={selectedStock.accessionNumber}
                 ticker={selectedStock.ticker}
                 onComplete={completeSection}
               />
-
             </SectionComponent>
           ) : currentSection === 4 && selectedStock ? (
             <SectionComponent
@@ -170,7 +164,6 @@ function App() {
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
             >
-              <InstructionsComponent text="Now, get the operating cash flows and the capital expenditures for each of the past 10 years." />
               <FinancialStatements
                 cik={selectedStock.cik}
                 accessionNumber={selectedStock.accessionNumber}
@@ -188,7 +181,6 @@ function App() {
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
             >
-              <InstructionsComponent text="Now, get the operating cash flows and the capital expenditures for each of the past 10 years." />
               <FinancialStatements
                 cik={selectedStock.cik}
                 accessionNumber={selectedStock.accessionNumber}

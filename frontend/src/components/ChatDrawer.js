@@ -7,7 +7,6 @@ import {
   DrawerOverlay,
   useDisclosure
 } from '@chakra-ui/react';
-
 import React from 'react';
 import TeacherChat from './TeacherChat';
 import './ChatDrawer.css';
@@ -31,7 +30,6 @@ const ChatDrawer = ({ chatHistory, isLoading, userMessage, setUserMessage, sendM
         }}
       >
         <i className="fas fa-comments"></i> {/* Chat icon */}
-
       </div>
       <Drawer
         isOpen={isOpen}

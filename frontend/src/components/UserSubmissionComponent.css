@@ -2,7 +2,6 @@
 	display: flex;
 	flex: 1;
 	flex-direction: column;
-	justify-content: space-evenly;
 	overflow-y: auto;
 }
 
@@ -33,4 +32,24 @@
 .choice-buttons button:hover {
 	background-color: green;
 	color: white;
+}
+
+.chat-tag-instructions {
+	background-color: teal;
+	color: white;
+	padding: 10px;
+	border-radius: 30px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+
+.chat-tag-instructions:hover,
+.chat-tag-instructions button:hover {
+	background-color: #004d40;
+}
+
+.chat-tag-instructions i {
+	font-size: 1.5rem;
+	margin-right: 8px;
 }

@@ -76,48 +76,6 @@ function CashFlowProjectionsComponent() {
         ],
     };
 
-    // const getData = async () => {
-    //     const cachedData = JSON.parse(localStorage.getItem('financialDataAsText'));
-    //     let historyText = `history: `;
-
-    //     for (let i = 0; i < 4; i++) {
-    //         if (i === 0) {
-    //             historyText += `\n Financial Doc: Balance Sheet\n ${cachedData[i]}\n`;
-    //         }
-
-    //         if (i === 1) {
-    //             historyText += `\n Financial Doc: Income Statement\n ${cachedData[i]}\n`;
-    //         }
-
-    //         if (i === 2) {
-    //             historyText += `\n Financial Doc: CashFlows\n ${cachedData[i]}\n`;
-    //         }
-
-    //         if (i === 3) {
-    //             historyText += `\n Years: \n ${cachedData[i]}\n`;
-    //         }
-    //     }
-
-    //     const finalMessage = `Using Statement of Cash Flows (use all 3 years) ${historyText}\n\nCalculate Free Cash Flow  using the Operating Cash Flows & Capital Expenditures. Give the final final of Free Cash Flow from sections within the required documents and only use the years that are considered from within the specific financial document used. Please only give the final result of cash flow values `;
-
-    //     console.log(finalMessage);
-
-    //     const res = await sendPrompt(finalMessage);
-
-    //     setCashFlow(res);
-    // }
-
-
-    // const getDiscountedCashFlow = async () => {
-    //     const res = await sendPrompt(`Based on the discount rate: ${discountRate}, the most recent Free Cash Flows: ${cashFlow}, and the Terminal Growth rate: ${growthRate} calculate the discounted cash flow projecting over the next 20 years and give the final numeric result`);
-    //     setDCF(res);
-    // }
-
-    // useEffect(() => {
-    //     getData();
-    //     getDiscountedCashFlow();
-    // }, [discountRate, growthRate]);
-
     useEffect(() => {
         projectCashFlows();
     }, [discountRate, growthRate]);
@@ -136,18 +94,12 @@ function CashFlowProjectionsComponent() {
                     <Input
                         value={discountRate}
                         onChange={(e) => {
-                            const val = e.target.value;
-                            if (val === "") {
-                                setDiscount("");  // Temporarily set the value to an empty string
-                            } else {
-                                const parsedVal = parseFloat(val);
-                                if (!isNaN(parsedVal) && parsedVal <= 99) {
-                                    setDiscount(parsedVal);  // Set state only if value is a valid number
-                                }
+                            const val = parseFloat(e.target.value);
+                            if (!isNaN(val) && val >= 0) {
+                                setDiscount(val); 
                             }
                         }}
-                        mb={4} // Margin bottom for spacing
-                        max={99}
+                        mb={4} 
                     />
                     <Slider
                         value={discountRate}
@@ -155,6 +107,9 @@ function CashFlowProjectionsComponent() {
                         max={50}
                         onChange={(val) => { setDiscount(val); }}
                     >
+                        <SliderMark value={-10} {...labelStyles}>
+                            -10%
+                        </SliderMark>
                         <SliderMark value={0} {...labelStyles}>
                             0%
                         </SliderMark>
@@ -187,28 +142,26 @@ function CashFlowProjectionsComponent() {
                         onChange={(e) => {
                             const val = parseFloat(e.target.value);
                             if (!isNaN(val) && val >= 0) {
-                                setGrowth(val); // Syncing Input with Slider
+                                setGrowth(val);
                             }
                         }}
-                        mb={4} // Margin bottom for spacing
+                        mb={4}
                     />
                     <Slider
                         defaultValue={0}
-                        min={0}
-                        max={15}
+                        value={growthRate}
+                        min={-50}
+                        max={100}
                         onChange={(val) => { setGrowth(val); }}
                     >
-                        <SliderMark value={3} {...labelStyles}>
-                            3%
+                        <SliderMark value={-50} {...labelStyles}>
+                            -50%
                         </SliderMark>
-                        <SliderMark value={6} {...labelStyles}>
-                            6%
+                        <SliderMark value={-10} {...labelStyles}>
+                            -10%
                         </SliderMark>
-                        <SliderMark value={9} {...labelStyles}>
-                            9%
-                        </SliderMark>
-                        <SliderMark value={12} {...labelStyles}>
-                            12%
+                        <SliderMark value={0} {...labelStyles}>
+                            0%
                         </SliderMark>
                         <SliderMark value={15} {...labelStyles}>
                             15%
@@ -221,9 +174,9 @@ function CashFlowProjectionsComponent() {
                 </Flex>
             </Flex>
 
-            <Flex justifyContent='space-around' align='center'>
+            <Flex justifyContent='space-around' align='center' gap='20px'>
                 {cashFlows.length > 0 && (
-                    <table>
+                    <table style={{ width: '50%' }}>
                         <thead>
                             <tr>
                                 <th>Year</th>
@@ -244,8 +197,8 @@ function CashFlowProjectionsComponent() {
                 )}
 
                 {/* Chart for Cash Flows */}
-                <div style={{ width: '50%' }}>
-                    <Line data={chartData} options={{ responsive: true }} />
+                <div style={{ width: '50%', height: '400px' }}>
+                    <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
                 </div>
             </Flex>
         </div>
