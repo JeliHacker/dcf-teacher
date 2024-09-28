@@ -7,7 +7,6 @@ import gemini from '../models/gemini.js';
 const test = () => {
     const cachedData = JSON.parse(localStorage.getItem(`financialDataAsText`));
 
-    console.log("Line 38: " + cachedData);
     if (cachedData === null || cachedData === undefined) return;
     
 
@@ -46,6 +45,7 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
     const [loading, setLoading] = useState(true);
     const [selectedStatement, setSelectedStatement] = useState('Balance Sheet');
     const [financialData, setFinancialData] = useState({
+        titles: {},
         income_statement: [],
         balance_sheet: [],
         cash_flow_statement: []
@@ -195,6 +195,10 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
                             Income Statement
                         </Tab>
                     </Tabs>
+
+                    {selectedStatement === 'Balance Sheet' && <span style={{ fontWeight: 'bold' }}>{financialData.titles['balance_sheet']}</span>}
+                    {selectedStatement === 'Statement of Cash Flows' && <span style={{ fontWeight: 'bold' }}>{financialData.titles['cash_flow_statement']}</span>}
+                    {selectedStatement === 'Income Statement' && <span style={{ fontWeight: 'bold' }}>{financialData.titles['income_statement']}</span>}
 
                     {/* Conditionally render the selected financial statement */}
                     {selectedStatement === 'Balance Sheet' && renderTable('Balance Sheet', financialData.balance_sheet)}
