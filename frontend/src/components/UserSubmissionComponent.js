@@ -77,19 +77,17 @@ function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
   };
 
   return (
-    <div className="user-input-section" style={{ animation: hasFocused ? 'none' : 'glow 1s infinite alternate' }}>
+    <div className="user-input-section">
       {currentSection === 0 && (
         <>
-          <div style={{ marginTop: '20px' }}>
-            <h3 style={{ fontSize: '28px', textAlign: 'left' }}>When you're finished reading the introduction, click the 'Next' button or use the guide above to move on.</h3>
-            
-            You can also use the chat box below to ask questions.
-            <div className='chat-tag-instructions'
-              tabIndex="0"
-            >
-            
-              <i className="fas fa-comments"></i> {/* Chat icon */}
-            </div>
+          <h3 style={{ fontSize: '28px', textAlign: 'left' }}>When you're finished reading the introduction, click the 'Next' button or use the guide above to move on.</h3>
+
+          You can also use the chat box below to ask questions.
+          <div className='chat-tag-instructions'
+            tabIndex="0"
+          >
+
+            <i className="fas fa-comments"></i> {/* Chat icon */}
           </div>
         </>
       )}
@@ -141,8 +139,14 @@ function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
 
       {currentSection === 2 && (
         <>
-          <div>
-            <h3 style={{ fontSize: '28px', textAlign: 'center' }}>Select a company to value.</h3>
+          <div style={{ textAlign: 'left' }}>
+            <h3 style={{ fontSize: '28px' }}>Select a company to value.</h3>
+            Some companies are better suited to discounted cash flow valuation than others.
+            A DCF is more helpful when a company has a long history of being profitable.
+            <br />
+            <br />
+            For this tutorial, we've selected three iconic companies in different industries who have been around for a while (more than 10 years) and have a history of profitability.
+            Choose one and let's take a look at their financial statements!
           </div>
         </>
       )}
@@ -168,73 +172,76 @@ function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
             Sometimes it will be listed under "capital expenditures", but most of the time it falls under "payments to acquire property, plant, and equiment".
             <br /><br />
           </div>
-          <div style={{ textAlign: 'left', border: '1px solid black', backgroundColor: '#fef3b2', fontSize: '28px' }}>
-            <span style={{ fontWeight: 'bold', marginLeft: '10px' }}>Instructions</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center', border: '1px solid black', padding: '5px' }}>
-            <h3>Find the following data for 2023:</h3>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-              <label style={{ display: 'flex', alignItems: 'center' }}>
-                Operating cash flows:
-              </label>
-              <input
-                type="text"
-                value={operatingCashFlow}
-                onChange={(e) => setOperatingCashFlow(e.target.value)}
-                className='input-box'
-              />
+          <div style={{ border: '1px solid black', borderRadius: '20px' }}>
+            <div style={{ textAlign: 'left', borderBottom: '1px solid black', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', backgroundColor: '#fef3b2', fontSize: '28px' }}>
+              <span style={{ fontWeight: 'bold', marginLeft: '10px' }}>Instructions</span>
             </div>
+            <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center', padding: '5px' }}>
+              <h3>Find the following data for 2023:</h3>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-              <label style={{ display: 'flex', alignItems: 'center' }}>
-                Capital expenditures:
-              </label>
-              <input
-                type="text"
-                value={capitalExpenditures}
-                onChange={(e) => setCapitalExpenditures(e.target.value)}
-                className='input-box'
-              />
-            </div>
-            <button
-              onClick={() => {
-                handleOpenResponseAnswerSubmit(
-                  'open response',
-                  'Find the following data for 2023: Operating Cash Flows and Capital Expenditures',
-                  {
-                    'operatingCashFlow': operatingCashFlow,
-                    'capitalExpenditures': capitalExpenditures
-                  });
-
-                setSectionCompleted(true);
-              }}
-              style={{
-                backgroundColor: 'green',
-                color: 'white',
-                padding: '5px 10px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: 'none',
-                cursor: 'pointer',
-                borderRadius: '4px',
-                transition: 'background-color 0.3s ease',
-                fontWeight: 'bold',
-              }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = '#005500'} // Darker green on hover
-              onMouseLeave={(e) => e.target.style.backgroundColor = 'green'} // Back to original green
-            >
-              Submit
-
-            </button>
-
-
-            {evaluationResult && (
-              <div style={{ textAlign: 'left' }}>
-                <ReactMarkdown>{evaluationResult}</ReactMarkdown>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                <label style={{ display: 'flex', alignItems: 'center' }}>
+                  Operating cash flows:
+                </label>
+                <input
+                  type="text"
+                  value={operatingCashFlow}
+                  onChange={(e) => setOperatingCashFlow(e.target.value)}
+                  className='input-box'
+                />
               </div>
-            )}
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                <label style={{ display: 'flex', alignItems: 'center' }}>
+                  Capital expenditures:
+                </label>
+                <input
+                  type="text"
+                  value={capitalExpenditures}
+                  onChange={(e) => setCapitalExpenditures(e.target.value)}
+                  className='input-box'
+                />
+              </div>
+              <button
+                onClick={() => {
+                  handleOpenResponseAnswerSubmit(
+                    'open response',
+                    'Find the following data for 2023: Operating Cash Flows and Capital Expenditures',
+                    {
+                      'operatingCashFlow': operatingCashFlow,
+                      'capitalExpenditures': capitalExpenditures
+                    });
+
+                  setSectionCompleted(true);
+                }}
+                style={{
+                  backgroundColor: 'green',
+                  color: 'white',
+                  padding: '5px 10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: 'none',
+                  cursor: 'pointer',
+                  borderRadius: '4px',
+                  transition: 'background-color 0.3s ease',
+                  fontWeight: 'bold',
+                }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#005500'} // Darker green on hover
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'green'} // Back to original green
+              >
+                Submit
+
+              </button>
+
+
+              {evaluationResult && (
+                <div style={{ textAlign: 'left' }}>
+                  <ReactMarkdown>{evaluationResult}</ReactMarkdown>
+                </div>
+              )}
+            </div>
           </div>
         </>
       )}

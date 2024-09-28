@@ -3,7 +3,7 @@ import dcf_teacher_intro from '../assets/dcf_teacher_intro.png';
 function InstructionsComponent({ text }) {
   return (
     <div className="section">
-      <div className="instructions">
+      <div>
         <p>{text}</p>
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
           <img src={dcf_teacher_intro} alt={"DCF Teacher"} className="intro-image" />
