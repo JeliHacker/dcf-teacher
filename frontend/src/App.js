@@ -101,7 +101,7 @@ function App() {
               title={sections[currentSection].title}
               content={sections[currentSection].content}
               onComplete={completeSection}
-              completed={sectionCompleted}
+              completed={true}
               setSectionCompleted={setSectionCompleted}
               sectionIndex={currentSection}
               navigateToSection={navigateToSection}
