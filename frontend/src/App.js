@@ -19,11 +19,12 @@ function App() {
   const [sectionCompleted, setSectionCompleted] = useState(false);
   const [sections, setSections] = useState([
     { title: 'Step 0: Introduction', content: 'Welcome to DCF Teacher!', unlocked: true, completed: true },
-    { title: 'Step 1: Select a Company', content: 'Select a company to analyze.', unlocked: true, completed: false },
-    { title: 'Step 2: Gather Data', content: 'Gather financial data for the selected company.', unlocked: false, completed: false },
-    { title: 'Step 3: Calculate Free Cash Flow', content: 'Calculate the Free Cash Flow.', unlocked: false, completed: false },
-    { title: 'Step 4: Determine Growth Rate', content: 'Determine the growth rate of Free Cash Flow.', unlocked: false, completed: false },
-    { title: 'Step 5: Select Discount Rate', content: 'Select an appropriate discount rate.', unlocked: false, completed: false },
+    { title: 'Step 1: What are Discounted Cash Flows?', content: 'Welcome to DCF Teacher!', unlocked: true, completed: true },
+    { title: 'Step 2: Select a Company', content: 'Select a company to analyze.', unlocked: true, completed: false },
+    { title: 'Step 3: Gather Data', content: 'Gather financial data for the selected company.', unlocked: false, completed: false },
+    { title: 'Step 4: Calculate Free Cash Flow', content: 'Calculate the Free Cash Flow.', unlocked: false, completed: false },
+    { title: 'Step 5: Determine Growth Rate', content: 'Determine the growth rate of Free Cash Flow.', unlocked: false, completed: false },
+    { title: 'Step 6: Select Discount Rate', content: 'Select an appropriate discount rate.', unlocked: false, completed: false },
     // Add more sections as needed
   ]);
   const { chatHistory, isLoading, userMessage, setUserMessage, sendMessage } = useChat();
@@ -57,7 +58,7 @@ function App() {
     setSelectedStock(stockDetails[stockTicker]);
     setSelectedStockTicker(stockTicker);
     let message = `I want to analyze ${stockTicker}.`;
-    sendMessage(message, stockTicker);  
+    sendMessage(message, stockTicker);
     completeSection();
   };
 
@@ -72,7 +73,7 @@ function App() {
           <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-around' }}>
             <GuideDrawer
               className="GuideDrawer"
-              currentSection={currentSection}
+              currentSection={sections[currentSection].title}
               sections={sections}
               navigateToSection={navigateToSection}
             />
@@ -95,113 +96,50 @@ function App() {
           />
         </div>
         <div className="Panel2">
-
-          {currentSection === 0 ? (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={sectionCompleted}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            >
+          <SectionComponent
+            title={sections[currentSection].title}
+            content={sections[currentSection].content}
+            onComplete={completeSection}
+            completed={true}
+            setSectionCompleted={setSectionCompleted}
+            sectionIndex={currentSection}
+            navigateToSection={navigateToSection}
+          >
+            {currentSection === 0 ? (
+              <InstructionsComponent text='The "cash flows" in discounted cash flows are free cash flow. Free cash flow is cash the company is bringin in minus any capital expenditures.' />
+            ) : currentSection === 1 ? (
               <IntroSection
                 title={sections[currentSection].title}
                 onComplete={completeSection}
                 completed={sections[currentSection].completed}
               />
-            </SectionComponent>
-          ) : currentSection === 1 ? (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={sectionCompleted}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            >
+            ) : currentSection === 2 ? (
               <StockSelection onSelectStock={handleStockSelect} />
-            </SectionComponent>
-          ) : currentSection === 2 && selectedStock ? (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={sectionCompleted}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            >
-              <InstructionsComponent text='The "cash flows" in discounted cash flows are free cash flow. Free cash flow is cash the company is bringin in minus any capital expenditures.' />
+            ) : currentSection === 3 && selectedStock ? (
               <FinancialStatements
                 cik={selectedStock.cik}
                 accessionNumber={selectedStock.accessionNumber}
                 ticker={selectedStock.ticker}
                 onComplete={completeSection}
               />
-
-            </SectionComponent>
-          ) : currentSection === 3 && selectedStock ? (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={sectionCompleted}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            >
-              <InstructionsComponent text="Now, get the operating cash flows and the capital expenditures for each of the past 10 years." />
+            ) : currentSection === 4 && selectedStock ? (
               <FinancialStatements
                 cik={selectedStock.cik}
                 accessionNumber={selectedStock.accessionNumber}
                 ticker={selectedStock.ticker}
                 onComplete={completeSection}
               />
-            </SectionComponent>
-          ) : currentSection === 4 && selectedStock ? (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={sectionCompleted}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            >
-              <InstructionsComponent text="Now, get the operating cash flows and the capital expenditures for each of the past 10 years." />
+            ) : currentSection === 5 && selectedStock ? (
               <FinancialStatements
                 cik={selectedStock.cik}
                 accessionNumber={selectedStock.accessionNumber}
                 ticker={selectedStock.ticker}
                 onComplete={completeSection}
               />
-            </SectionComponent>
-          ) : currentSection === 5 && selectedStock ? (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={sectionCompleted}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            >
+            ) : currentSection === 6 && selectedStock ? (
               <CashFlowProjectionsComponent ticker={selectedStock.ticker} />
-            </SectionComponent>
-          ) : (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={sections[currentSection].completed}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            />
-          )}
+            ) : null}
+          </SectionComponent>
         </div>
       </div>
     </ChakraProvider>

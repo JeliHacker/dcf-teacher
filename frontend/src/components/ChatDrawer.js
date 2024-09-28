@@ -1,11 +1,12 @@
 import {
   Button,
+  CloseButton,
   Drawer,
+  DrawerCloseButton,
   DrawerContent,
   DrawerOverlay,
   useDisclosure
 } from '@chakra-ui/react';
-
 import React from 'react';
 import TeacherChat from './TeacherChat';
 import './ChatDrawer.css';
@@ -29,18 +30,18 @@ const ChatDrawer = ({ chatHistory, isLoading, userMessage, setUserMessage, sendM
         }}
       >
         <i className="fas fa-comments"></i> {/* Chat icon */}
-
       </div>
       <Drawer
         isOpen={isOpen}
-        placement='left'
+        placement='right'
         onClose={onClose}
         finalFocusRef={btnRef}
-        size={'full'}
+        size='md'
       >
         <DrawerOverlay />
         <DrawerContent className='content'>
-          <strong className='instructions'>Press ESC to close</strong>
+          <DrawerCloseButton />
+
           <TeacherChat
             chatHistory={chatHistory}
             isLoading={isLoading}

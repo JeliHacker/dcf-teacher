@@ -124,6 +124,7 @@ def return_financial_data(ticker):
     sections_urls = get_financial_statements_urls_given_accession_number(most_recent_10k['accessionNumber'], cik=COMPANY_CIK)
 
     financial_data = {
+        'titles': {},
         'income_statement': None,
         'balance_sheet': None,
         'cash_flow_statement': None
@@ -172,10 +173,11 @@ def return_financial_data(ticker):
 
             # Store the DataFrame in the corresponding key in the dictionary
             financial_data[statement_type] = df
+            financial_data['titles'][statement_type] = title
             # print(f"Extracted {statement_type} data:\n", df)
 
             # Stop once all three statements are processed
-            if all(df is not None and not df.empty for df in financial_data.values()):
+            if all(df is not None and not df.empty for df in list(financial_data.values())[1:]):
                 break
 
     docArray.append(years)

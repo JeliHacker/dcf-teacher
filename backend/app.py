@@ -46,6 +46,7 @@ def get_financial_data():
 
     # Convert the DataFrames to dictionaries
     financial_data_dict = {
+        'titles': financial_data[0]['titles'],
         'income_statement': financial_data[0]['income_statement'].to_dict(orient="records"),
         'balance_sheet': financial_data[0]['balance_sheet'].to_dict(orient="records"),
         'cash_flow_statement': financial_data[0]['cash_flow_statement'].to_dict(orient="records")

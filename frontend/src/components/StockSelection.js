@@ -13,7 +13,6 @@ function StockSelection({ onSelectStock }) {
 
   return (
     <div className="stock-selection">
-      <h3>Select a company:</h3>
       <div className="stocks">
         {stocks.map((stock, index) => (
           <div key={index} className="stock" onClick={() => onSelectStock(stock.ticker)}>

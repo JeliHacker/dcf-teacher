@@ -2,7 +2,6 @@
 	display: flex;
 	flex: 1;
 	flex-direction: column;
-	justify-content: space-evenly;
 	overflow-y: auto;
 }
 
@@ -10,7 +9,16 @@
 	margin-left: 10px;
 	width: 150px;
 	text-align: center;
+	border: 2px solid #dddddd;
+	border-radius: 5px;
+	padding: 5px;
+	outline: none;
 }
+
+.input-box:focus {
+	border-color: #319795;      /* Change to a new color on focus (orange-red in this case) */
+	box-shadow: 0 0 5px rgba(255, 69, 0, 0.5);  /* Optional: add a glow effect with the same color */
+  }
 
 .highlight {
 	background-color: green !important;
@@ -33,4 +41,24 @@
 .choice-buttons button:hover {
 	background-color: green;
 	color: white;
+}
+
+.chat-tag-instructions {
+	background-color: teal;
+	color: white;
+	padding: 10px;
+	border-radius: 30px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+
+.chat-tag-instructions:hover,
+.chat-tag-instructions button:hover {
+	background-color: #004d40;
+}
+
+.chat-tag-instructions i {
+	font-size: 1.5rem;
+	margin-right: 8px;
 }
