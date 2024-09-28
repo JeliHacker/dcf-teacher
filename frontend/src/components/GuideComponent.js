@@ -7,9 +7,9 @@ function GuideComponent({ currentSection, sections, navigateToSection, onClose }
     <div className="guide">
       <h2>Guide</h2>
       <hr className='separator'/>
-      <ul style={{ listStyleType: 'none', padding: 0 }}>
+      <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
         {sections.map((section, index) => (
-          <li key={index} style={{ marginBottom: '10px' }}>
+          <li key={index} style={{ marginBottom: '10px', display: 'flex' }}>
             <Button
               variant="outline"
               onClick={() => {navigateToSection(index); onClose();}}

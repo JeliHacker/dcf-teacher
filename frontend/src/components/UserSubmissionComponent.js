@@ -77,7 +77,7 @@ function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
 
   return (
     <div className="user-input-section" style={{ animation: hasFocused ? 'none' : 'glow 1s infinite alternate' }}>
-      {currentSection === 0 && (
+      {currentSection === 1 && (
         <>
           <div>
             <h3>Click below to generate a question:</h3>
@@ -122,7 +122,7 @@ function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
         </>
       )}
 
-      {currentSection === 1 && (
+      {currentSection === 2 && (
         <>
           <div>
             <h3 style={{ fontSize: '28px', textAlign: 'center' }}>Select a company to value.</h3>
@@ -131,7 +131,7 @@ function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
         </>
       )}
 
-      {currentSection === 2 && (
+      {currentSection === 3 && (
         <>
           <h3>Find the following data for 2023:</h3>
 
@@ -198,7 +198,7 @@ function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
         </>
       )}
 
-      {currentSection === 3 && (
+      {currentSection === 4 && (
         <>
           <h3>Now, get the OCF and CapEx for each of the past 6 years.</h3>
 

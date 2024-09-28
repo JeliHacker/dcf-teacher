@@ -2,6 +2,7 @@ import {
   Button,
   CloseButton,
   Drawer,
+  DrawerCloseButton,
   DrawerContent,
   DrawerOverlay,
   useDisclosure
@@ -37,18 +38,11 @@ const ChatDrawer = ({ chatHistory, isLoading, userMessage, setUserMessage, sendM
         placement='right'
         onClose={onClose}
         finalFocusRef={btnRef}
-        size={'full'}
+        size='md'
       >
         <DrawerOverlay />
         <DrawerContent className='content'>
-          <CloseButton
-            size='lg'
-            position="absolute"
-            top="0"
-            right="1%"
-            onClick={onClose}
-          />
-          <strong className='instructions'>Press ESC to close</strong>
+          <DrawerCloseButton />
 
           <TeacherChat
             chatHistory={chatHistory}
