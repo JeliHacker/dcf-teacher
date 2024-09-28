@@ -58,7 +58,7 @@ function App() {
     setSelectedStock(stockDetails[stockTicker]);
     setSelectedStockTicker(stockTicker);
     let message = `I want to analyze ${stockTicker}.`;
-    sendMessage(message, stockTicker);  
+    sendMessage(message, stockTicker);
     completeSection();
   };
 
@@ -96,121 +96,50 @@ function App() {
           />
         </div>
         <div className="Panel2">
-
-          {currentSection === 0 ? (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={true}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            >
+          <SectionComponent
+            title={sections[currentSection].title}
+            content={sections[currentSection].content}
+            onComplete={completeSection}
+            completed={true}
+            setSectionCompleted={setSectionCompleted}
+            sectionIndex={currentSection}
+            navigateToSection={navigateToSection}
+          >
+            {currentSection === 0 ? (
               <InstructionsComponent text='The "cash flows" in discounted cash flows are free cash flow. Free cash flow is cash the company is bringin in minus any capital expenditures.' />
-            </SectionComponent>
-          ) : currentSection === 1 ? (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={true}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            >
+            ) : currentSection === 1 ? (
               <IntroSection
                 title={sections[currentSection].title}
                 onComplete={completeSection}
                 completed={sections[currentSection].completed}
               />
-            </SectionComponent>
-          ) : currentSection === 2 ? (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={sectionCompleted}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            >
+            ) : currentSection === 2 ? (
               <StockSelection onSelectStock={handleStockSelect} />
-            </SectionComponent>
-          ) : currentSection === 3 && selectedStock ? (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={sectionCompleted}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            >
+            ) : currentSection === 3 && selectedStock ? (
               <FinancialStatements
                 cik={selectedStock.cik}
                 accessionNumber={selectedStock.accessionNumber}
                 ticker={selectedStock.ticker}
                 onComplete={completeSection}
               />
-            </SectionComponent>
-          ) : currentSection === 4 && selectedStock ? (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={sectionCompleted}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            >
+            ) : currentSection === 4 && selectedStock ? (
               <FinancialStatements
                 cik={selectedStock.cik}
                 accessionNumber={selectedStock.accessionNumber}
                 ticker={selectedStock.ticker}
                 onComplete={completeSection}
               />
-            </SectionComponent>
-          ) : currentSection === 5 && selectedStock ? (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={sectionCompleted}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            >
+            ) : currentSection === 5 && selectedStock ? (
               <FinancialStatements
                 cik={selectedStock.cik}
                 accessionNumber={selectedStock.accessionNumber}
                 ticker={selectedStock.ticker}
                 onComplete={completeSection}
               />
-            </SectionComponent>
-          ) : currentSection === 6 && selectedStock ? (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={sectionCompleted}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            >
+            ) : currentSection === 6 && selectedStock ? (
               <CashFlowProjectionsComponent ticker={selectedStock.ticker} />
-            </SectionComponent>
-          ) : (
-            <SectionComponent
-              title={sections[currentSection].title}
-              content={sections[currentSection].content}
-              onComplete={completeSection}
-              completed={sections[currentSection].completed}
-              setSectionCompleted={setSectionCompleted}
-              sectionIndex={currentSection}
-              navigateToSection={navigateToSection}
-            />
-          )}
+            ) : null}
+          </SectionComponent>
         </div>
       </div>
     </ChakraProvider>
