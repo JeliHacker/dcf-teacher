@@ -7,7 +7,7 @@
 }
 
 .intro-image {
-    width: 250px;
+    width: 400px;
     object-fit: contain;
     max-width: 100%;
     height: auto;
@@ -16,14 +16,10 @@
 
 .intro-text {
     flex: 1;
-    /* Allow the text to take up remaining space */
+    text-align: left;
+    font-size: large;
 }
 
 .intro-text h3 {
     font-size: 3em;
-    margin: 0 0 10px 0;
-}
-
-.intro-text p {
-    margin: 0;
 }

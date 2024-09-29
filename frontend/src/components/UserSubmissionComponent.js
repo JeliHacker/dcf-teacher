@@ -86,8 +86,13 @@ function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
           <div className='chat-tag-instructions'
             tabIndex="0"
           >
-
             <i className="fas fa-comments"></i> {/* Chat icon */}
+          </div>
+
+          <div style={{ textAlign: 'left', borderBottom: '1px solid black', backgroundColor: '#fef3b2' }}>
+            <span style={{ fontWeight: 'bold', marginLeft: '10px', fontSize: '18px' }}>Instructions</span>
+            <br />
+            When you're finished reading the introduction, press the "Next" button or use the guide above to move on.
           </div>
         </>
       )}
