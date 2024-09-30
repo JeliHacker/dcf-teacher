@@ -15,22 +15,22 @@ const GuideDrawer = ({ currentSection, sections, navigateToSection }) => {
 
   return (
     <>
-
-      <Button
-        ref={btnRef}
-        variant="outline"
-        onClick={onOpen}
-        width="100%"
-        height="50px"
-        whiteSpace="normal"
-        padding="1rem"
-        borderWidth="2px"         // Increase the border width
-        borderColor="gray.400"     // Darker border color for contrast
-        borderStyle="solid"
-        _hover={{ backgroundColor: '#E2E8F0' }} // Hover effect
-      >
-        {currentSection}
-      </Button>
+      <div style={{ display: 'flex', width: '100%', padding: '0.5rem' }}>
+        <Button
+          ref={btnRef}
+          variant="outline"
+          onClick={onOpen}
+          width="100%"
+          height="50px"
+          whiteSpace="normal"
+          borderWidth="2px"         // Increase the border width
+          borderColor="gray.400"     // Darker border color for contrast
+          borderStyle="solid"
+          _hover={{ backgroundColor: '#E2E8F0' }} // Hover effect
+        >
+          {currentSection}
+        </Button>
+      </div>
       <Drawer
         isOpen={isOpen}
         placement='left'

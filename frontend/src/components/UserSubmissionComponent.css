@@ -22,7 +22,7 @@
 
 .highlight {
 	background-color: green !important;
-	color: white;
+	color: white !important;
 	border: 2px solid black;
 }
 
@@ -61,4 +61,15 @@
 .chat-tag-instructions i {
 	font-size: 1.5rem;
 	margin-right: 8px;
+}
+
+.instructions-section {
+	position: sticky;
+	text-align: left;
+	padding: 1rem;
+	border-top: 2px solid rgba(0, 0,0, 0.2);
+	background-color: #fef3b2;
+	font-weight: bold; 
+	font-size: 18px;
+	border-bottom: 2px solid rgba(0, 0,0, 0.2);
 }

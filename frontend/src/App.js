@@ -18,19 +18,28 @@ function App() {
   const [selectedStockTicker, setSelectedStockTicker] = useState(null);
   const [sectionCompleted, setSectionCompleted] = useState(false);
   const [sections, setSections] = useState([
-    { title: 'Step 0: Introduction', content: 'Welcome to DCF Teacher!', unlocked: true, completed: true },
-    { title: 'Step 1: What are Discounted Cash Flows?', content: 'Welcome to DCF Teacher!', unlocked: true, completed: true },
-    { title: 'Step 2: Select a Company', content: 'Select a company to analyze.', unlocked: true, completed: false },
-    { title: 'Step 3: Gather Data', content: 'Gather financial data for the selected company.', unlocked: false, completed: false },
-    { title: 'Step 4: Calculate Free Cash Flow', content: 'Calculate the Free Cash Flow.', unlocked: false, completed: false },
-    { title: 'Step 5: Determine Growth Rate', content: 'Determine the growth rate of Free Cash Flow.', unlocked: false, completed: false },
-    { title: 'Step 6: Select Discount Rate', content: 'Select an appropriate discount rate.', unlocked: false, completed: false },
+    { index: 0, title: 'Step 0: Introduction', content: 'Welcome to DCF Teacher!', unlocked: true, completed: true },
+    { index: 1, title: 'Step 1: What are Discounted Cash Flows?', content: 'Welcome to DCF Teacher!', unlocked: true, completed: true },
+    { index: 2, title: 'Step 2: Select a Company', content: 'Select a company to analyze.', unlocked: true, completed: false },
+    { index: 3, title: 'Step 3: Gather Data', content: 'Gather financial data for the selected company.', unlocked: false, completed: false },
+    // { index: 4, title: 'Step 4: Calculate Free Cash Flow', content: 'Calculate the Free Cash Flow.', unlocked: false, completed: false },
+    // { index: 5, title: 'Step 5: Determine Growth Rate', content: 'Determine the growth rate of Free Cash Flow.', unlocked: false, completed: false },
+    { index: 4, title: 'Step 4: Set Discount and Growth Rate', content: 'Select an appropriate discount rate.', unlocked: false, completed: false },
     // Add more sections as needed
   ]);
   const { chatHistory, isLoading, userMessage, setUserMessage, sendMessage } = useChat();
 
+  function updateSectionCompleted(sectionIndex, isCompleted) {
+    setSections(prevSections =>
+      prevSections.map(section =>
+        section.index === sectionIndex
+          ? { ...section, completed: isCompleted }  // Update the 'completed' property
+          : section
+      )
+    );
+  }
+
   const completeSection = () => {
-    console.log("completeSection");
     const updatedSections = sections.map((section, index) => {
       if (index === currentSection) {
         return { ...section, completed: true };
@@ -57,8 +66,8 @@ function App() {
 
     setSelectedStock(stockDetails[stockTicker]);
     setSelectedStockTicker(stockTicker);
-    let message = `I want to analyze ${stockTicker}.`;
-    sendMessage(message, stockTicker);
+    // let message = `I want to analyze ${stockTicker.toUpperCase()}.`;
+    // sendMessage(message, stockTicker);
     completeSection();
   };
 
@@ -92,7 +101,7 @@ function App() {
             sections={sections}
             onSubmit={onSubmitAnswers}
             selectedStockTicker={selectedStockTicker}
-            setSectionCompleted={setSectionCompleted}
+            setSectionCompleted={updateSectionCompleted}
           />
         </div>
         <div className="Panel2">
@@ -100,7 +109,7 @@ function App() {
             title={sections[currentSection].title}
             content={sections[currentSection].content}
             onComplete={completeSection}
-            completed={true}
+            completed={sections[currentSection].completed}
             setSectionCompleted={setSectionCompleted}
             sectionIndex={currentSection}
             navigateToSection={navigateToSection}
@@ -122,21 +131,21 @@ function App() {
                 ticker={selectedStock.ticker}
                 onComplete={completeSection}
               />
+            ) : currentSection === -1 && selectedStock ? (
+              <FinancialStatements
+                cik={selectedStock.cik}
+                accessionNumber={selectedStock.accessionNumber}
+                ticker={selectedStock.ticker}
+                onComplete={completeSection}
+              />
+            ) : currentSection === -1 && selectedStock ? (
+              <FinancialStatements
+                cik={selectedStock.cik}
+                accessionNumber={selectedStock.accessionNumber}
+                ticker={selectedStock.ticker}
+                onComplete={completeSection}
+              />
             ) : currentSection === 4 && selectedStock ? (
-              <FinancialStatements
-                cik={selectedStock.cik}
-                accessionNumber={selectedStock.accessionNumber}
-                ticker={selectedStock.ticker}
-                onComplete={completeSection}
-              />
-            ) : currentSection === 5 && selectedStock ? (
-              <FinancialStatements
-                cik={selectedStock.cik}
-                accessionNumber={selectedStock.accessionNumber}
-                ticker={selectedStock.ticker}
-                onComplete={completeSection}
-              />
-            ) : currentSection === 6 && selectedStock ? (
               <CashFlowProjectionsComponent ticker={selectedStock.ticker} />
             ) : null}
           </SectionComponent>

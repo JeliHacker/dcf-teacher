@@ -17,6 +17,7 @@ function useQuestion() {
             
             // Assuming the response contains the question and possible answers
             setQuestionData(response.data);
+            setEvaluationResult(null);
         } catch (error) {
             console.error('Error generating question:', error);
         } finally {
