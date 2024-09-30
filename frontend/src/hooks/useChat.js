@@ -12,7 +12,6 @@ function useChat() {
 
         setIsLoading(true);
         const apiUrl = process.env.REACT_APP_API_URL;
-        console.log("ticker: "+ticker);
 
         try {
             // Make request to your Flask API instead of Gemini directly
@@ -33,7 +32,7 @@ function useChat() {
                     historyText = historyText + `\n Financial Doc: CashFlows\n ${cachedData[i]}\n`;
                 }
 
-                if(i == 3)
+                if(i === 3)
                 {
                     historyText = historyText + `\n Years: \n ${cachedData[i]}\n`;
                 }
@@ -41,12 +40,10 @@ function useChat() {
 
             const finalMessage = "For Income Statement and Statement of Cash Flows use all 3 years and the first 2 for the Balance Sheet"+historyText+" \n\n"+message+"\n\n only answer based on the number columns given";
 
-            console.log(finalMessage);
-
             const response = await sendPrompt(finalMessage);
             console.log("res: "+response);
              
-            //const response = await axios.post(`${apiUrl}/api/ask`, { prompt: message });
+            // const response = await axios.post(`${apiUrl}/api/ask`, { prompt: message });
 
             // Add both user's message and bot's response to the chat history at once
             const newMessage = { sender: 'user', text: message };

@@ -75,7 +75,6 @@ h2 {
   flex-direction: column;
   align-items: center;
   justify-content: space-between; /* Space between chat and user input */
-  padding: 10px;
   background-color: #f1f1f1; /* Background color for visual purposes */
   overflow-y: hidden;
   overflow-x: hidden;

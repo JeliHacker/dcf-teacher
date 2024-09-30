@@ -207,9 +207,7 @@ function FinancialStatements({ cik, accessionNumber, onComplete, ticker }) {
                 </>
             )}
 
-            <Button onClick={onComplete} style={{ marginTop: '20px' }}>
-                Complete Step 2!
-            </Button>
+            <div style={{padding: '20px'}}></div>
         </div>
     );
 }

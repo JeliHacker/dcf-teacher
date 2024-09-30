@@ -80,17 +80,19 @@ function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
     <div className="user-input-section">
       {currentSection === 0 && (
         <>
-          <h3 style={{ fontSize: '28px', textAlign: 'left' }}>When you're finished reading the introduction, click the 'Next' button or use the guide above to move on.</h3>
-
-          You can also use the chat box below to ask questions.
-          <div className='chat-tag-instructions'
-            tabIndex="0"
-          >
-            <i className="fas fa-comments"></i> {/* Chat icon */}
+          <div style={{ textAlign: 'left', paddingLeft: '10px', paddingRight: '10px' }}>
+            Look for the icon below on the right side of your screen to ask questions.
+            <div className='chat-tag-instructions'
+              tabIndex="0"
+              style={{ marginBottom: '20px' }}
+            >
+              <i className="fas fa-comments"></i> {/* Chat icon */}
+            </div>
           </div>
-
-          <div style={{ textAlign: 'left', borderBottom: '1px solid black', backgroundColor: '#fef3b2' }}>
-            <span style={{ fontWeight: 'bold', marginLeft: '10px', fontSize: '18px' }}>Instructions</span>
+          <div className='instructions-section'>
+            <span style={{ fontWeight: 'bold', marginLeft: '10px', fontSize: '18px', borderBottom: '2px solid rgba(0, 0,0, 0.2)' }}>Instructions</span>
+          </div>
+          <div style={{ textAlign: 'left', paddingLeft: '10px' }}>
             <br />
             When you're finished reading the introduction, press the "Next" button or use the guide above to move on.
           </div>
@@ -100,51 +102,14 @@ function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
       {currentSection === 1 && (
         <>
           <div>
-            <h3>Click below to generate a question:</h3>
-            <Button
-              onClick={handleGenerateQuestion}
-              disabled={isLoading}
-              fontWeight={'normal'}
-              colorScheme={'blue'}
-            >
-              {isLoading ? 'Generating...' : 'Generate Question'}
-            </Button>
+            Read the article about Discounted Cash Flow analysis.
           </div>
-
-          {/* Display the generated question */}
-          {questionData && (
-            <>
-              <div>
-                <h3>Answer the following question:</h3>
-                <ReactMarkdown>{questionData}</ReactMarkdown>
-              </div>
-
-              <div className="choice-buttons">
-                <button onClick={() => handleSelectAnswer('A')}
-                  className={selectedAnswer === 'A' ? 'highlight' : ''}>A</button>
-                <button onClick={() => handleSelectAnswer('B')}
-                  className={selectedAnswer === 'B' ? 'highlight' : ''}>B</button>
-                <button onClick={() => handleSelectAnswer('C')}
-                  className={selectedAnswer === 'C' ? 'highlight' : ''}>C</button>
-                <button onClick={() => handleSelectAnswer('D')}
-                  className={selectedAnswer === 'D' ? 'highlight' : ''}>D</button>
-              </div>
-            </>
-          )}
-
-          {/* Show evaluation result */}
-          {evaluationResult && (
-            <div>
-              <h3>Result:</h3>
-              <ReactMarkdown>{evaluationResult}</ReactMarkdown>
-            </div>
-          )}
         </>
       )}
 
       {currentSection === 2 && (
         <>
-          <div style={{ textAlign: 'left' }}>
+          <div style={{ textAlign: 'left', padding: '10px' }}>
             <h3 style={{ fontSize: '28px' }}>Select a company to value.</h3>
             Some companies are better suited to discounted cash flow valuation than others.
             A DCF is more helpful when a company has a long history of being profitable.
@@ -158,7 +123,7 @@ function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
 
       {currentSection === 3 && (
         <>
-          <div style={{ textAlign: 'left', marginTop: '10px' }}>
+          <div style={{ textAlign: 'left', padding: '10px' }}>
             <h3 style={{ fontSize: '28px', fontWeight: 'bold' }}>Free Cash Flow</h3>
 
             <a href='https://www.investopedia.com/terms/f/freecashflow.asp'>Investopedia</a> defines Free Cash Flow (FCF) as "the cash that a company generates after accounting for cash outflows to support its operations and maintain its capital assets."
@@ -174,11 +139,11 @@ function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
             We can find both of these numbers in the statement of cash flows.
             For operating cash flows, you're looking for the cash flows generated from operating activities.
             Capital expenditures will be found in the "cash flows from investing" section.
-            Sometimes it will be listed under "capital expenditures", but most of the time it falls under "payments to acquire property, plant, and equiment".
+            Sometimes it will be listed under "capital expenditures", but most of the time it falls under "payments to acquire property, plant, and equipment".
             <br /><br />
           </div>
 
-          <div style={{ border: '1px solid black', borderRadius: '20px' }}>
+          <div className='instructions-section' style={{ border: '1px solid black', borderRadius: '20px' }}>
             <div style={{ textAlign: 'left', borderBottom: '1px solid black', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', backgroundColor: '#fef3b2', fontSize: '28px' }}>
               <span style={{ fontWeight: 'bold', marginLeft: '10px' }}>Instructions</span>
             </div>
@@ -218,7 +183,8 @@ function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
                       'capitalExpenditures': capitalExpenditures
                     });
 
-                  setSectionCompleted(true);
+                  setSectionCompleted(currentSection, true);
+
                 }}
                 style={{
                   backgroundColor: 'green',
@@ -253,60 +219,25 @@ function UserInputComponent({ currentSection, onSubmit, setSectionCompleted }) {
 
       {currentSection === 4 && (
         <>
-          <h3>Now, get the OCF and CapEx for each of the past 6 years.</h3>
+          <div style={{ textAlign: 'left', marginTop: '10px', padding: '10px' }}>
+            <h3 style={{ fontSize: '28px', fontWeight: 'bold' }}>Discount and Growth Rate</h3>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-            <label style={{ display: 'flex', alignItems: 'center' }}>
-              Operating cash flows:
-            </label>
-            <input
-              type="text"
-              value={operatingCashFlow}
-              onChange={(e) => setOperatingCashFlow(e.target.value)}
-              onFocus={handleFocus} // Disable glow on focus
-              className='input-box'
-            />
+            The important thing to remember about discounted cash flow analysis is that it is built on assumptions, and these assumptions may or not be true.
+            No one knows for certain what a company's future growth rate will be.
+            But one reason DCF analysis is still useful because it shows us how fast a company will have to grow to justify a certain price.
+            <br />
+            <br />
+            There are three inputs you can explore in this section:
+            <br />The first is the initial amount of free cash flow.
+            The default is the most recent year's FCF.
+            <br />
+            The second is the discount rate. We've set this to 9% by default, but you should move it up and down to see how it affects the company's valuation.
+            <br />
+            The third is the growth rate. We've set this to 10% by default. See how the growth rate affects the valuation of the company.
+            Bonus points if you check the price of the stock and come back to see what growth rate needs to be achieved to justify the current price!
+
+
           </div>
-
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-            <label style={{ display: 'flex', alignItems: 'center' }}>
-              Capital expenditures:
-            </label>
-            <input
-              type="text"
-              value={capitalExpenditures}
-              onChange={(e) => setCapitalExpenditures(e.target.value)}
-              onFocus={handleFocus} // Disable glow on focus
-              className='input-box'
-            />
-          </div>
-          <button
-            onClick={() => {
-              handleOpenResponseAnswerSubmit('open response', {
-                'operatingCashFlow': operatingCashFlow,
-                'capitalExpenditures': capitalExpenditures
-              });
-
-              setSectionCompleted(true);
-            }}
-            style={{
-              backgroundColor: 'green',
-              color: 'white',
-              padding: '5px 10px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: 'none',
-              cursor: 'pointer',
-              borderRadius: '4px',
-              transition: 'background-color 0.3s ease'
-            }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#005500'} // Darker green on hover
-            onMouseLeave={(e) => e.target.style.backgroundColor = 'green'} // Back to original green
-          >
-            Submit
-            <span style={{ marginLeft: '5px' }}>▶</span>
-          </button>
         </>
       )}
     </div>

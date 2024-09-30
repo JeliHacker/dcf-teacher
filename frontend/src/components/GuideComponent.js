@@ -22,6 +22,9 @@ function GuideComponent({ currentSection, sections, navigateToSection, onClose }
               whiteSpace="normal"
               padding="1rem"
               textAlign="left"
+              borderWidth="2px"      
+              borderColor="gray.400"  
+              borderStyle="solid"
             >
               {section.title}
             </Button>

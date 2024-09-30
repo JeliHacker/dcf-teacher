@@ -8,7 +8,7 @@ function IntroSection({ onComplete }) {
     return (
         <div className="section">
             <div className="intro-section">
-                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: '20px' }}>
                     <div className="intro-text">
                         <h3>The Time Value of Money</h3>
                         If I offered you $100 today, or $100 a year from now, which would you take? What if I offered you $100 today, or $110 a year from now?
@@ -29,7 +29,7 @@ function IntroSection({ onComplete }) {
 
                 <MultipleChoiceQuestion topic={'time value of money'} />
 
-                <div className="intro-text">
+                {/* <div className="intro-text">
                     <h3>The Two Assumptions</h3>
                     So, we know that money today is worth more than money tomorrow. But how much more? To determine how to compare future cash flows to current ones, we use a <strong>discount rate</strong>.
                     There is a formula for this. 
@@ -45,7 +45,7 @@ function IntroSection({ onComplete }) {
                     Every company exists to make money. However, not every company is profitable. Some companies, such as startups, have never been profitable, and hope to one day become profitable.
                     Other companies may have been profitable in the past but are no longer.
                     Companies that are profitable generate free cash flow. Free cash flow is all the cash a company brings in, minus money is invests back in the company.
-                </p>
+                </p> */}
 
             </div>
 
