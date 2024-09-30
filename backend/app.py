@@ -128,7 +128,7 @@ def submit_open_response_answer():
     return response.text
 
 @app.route('/api/sec_api', methods=['GET'])
-def get_operating_cash_flows():
+def get_category_data():
     """_summary_
 
     Returns:
