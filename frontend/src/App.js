@@ -11,6 +11,7 @@ import SectionComponent from './components/SectionComponent';
 import StockSelection from './components/StockSelection';
 import UserSubmissionComponent from './components/UserSubmissionComponent';
 import useChat from './hooks/useChat';
+import Navbar from './components/Navbar'; 
 
 function App() {
   const [currentSection, setCurrentSection] = useState(0);
@@ -77,6 +78,7 @@ function App() {
 
   return (
     <ChakraProvider>
+      <Navbar />
       <div className="App">
         <div className='right-column'>
           <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-around' }}>
