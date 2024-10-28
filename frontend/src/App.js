@@ -13,7 +13,9 @@ import StockSelection from './components/StockSelection';
 import UserSubmissionComponent from './components/UserSubmissionComponent';
 import useChat from './hooks/useChat';
 import Navbar from './components/Navbar';
-import About from './pages/About';  // Import your new About page
+import About from './pages/About';
+import Tutorial from './pages/Tutorial';
+import Browse from './pages/Browse';
 
 function App() {
   const [currentSection, setCurrentSection] = useState(0);
@@ -84,82 +86,28 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={
-            <div className="App">
-              <div className='right-column'>
-                <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-around' }}>
-                  <GuideDrawer
-                    className="GuideDrawer"
-                    currentSection={sections[currentSection].title}
-                    sections={sections}
-                    navigateToSection={navigateToSection}
-                  />
-                  <ChatDrawer
-                    chatHistory={chatHistory}
-                    isLoading={isLoading}
-                    userMessage={userMessage}
-                    setUserMessage={setUserMessage}
-                    sendMessage={sendMessage}
-                    ticker={selectedStock !== null ? selectedStock.ticker : ''}
-                  />
-                </div>
-                <hr className='separator' />
-                <UserSubmissionComponent
-                  currentSection={currentSection}
-                  sections={sections}
-                  onSubmit={onSubmitAnswers}
-                  selectedStockTicker={selectedStockTicker}
-                  setSectionCompleted={updateSectionCompleted}
-                />
-              </div>
-              <div className="Panel2">
-                <SectionComponent
-                  title={sections[currentSection].title}
-                  content={sections[currentSection].content}
-                  onComplete={completeSection}
-                  completed={sections[currentSection].completed}
-                  setSectionCompleted={setSectionCompleted}
-                  sectionIndex={currentSection}
-                  navigateToSection={navigateToSection}
-                >
-                  {currentSection === 0 ? (
-                    <InstructionsComponent text='The "cash flows" in discounted cash flows are free cash flow. Free cash flow is cash the company is bringin in minus any capital expenditures.' />
-                  ) : currentSection === 1 ? (
-                    <IntroSection
-                      title={sections[currentSection].title}
-                      onComplete={completeSection}
-                      completed={sections[currentSection].completed}
-                    />
-                  ) : currentSection === 2 ? (
-                    <StockSelection onSelectStock={handleStockSelect} />
-                  ) : currentSection === 3 && selectedStock ? (
-                    <FinancialStatements
-                      cik={selectedStock.cik}
-                      accessionNumber={selectedStock.accessionNumber}
-                      ticker={selectedStock.ticker}
-                      onComplete={completeSection}
-                    />
-                  ) : currentSection === -1 && selectedStock ? (
-                    <FinancialStatements
-                      cik={selectedStock.cik}
-                      accessionNumber={selectedStock.accessionNumber}
-                      ticker={selectedStock.ticker}
-                      onComplete={completeSection}
-                    />
-                  ) : currentSection === -1 && selectedStock ? (
-                    <FinancialStatements
-                      cik={selectedStock.cik}
-                      accessionNumber={selectedStock.accessionNumber}
-                      ticker={selectedStock.ticker}
-                      onComplete={completeSection}
-                    />
-                  ) : currentSection === 4 && selectedStock ? (
-                    <CashFlowProjectionsComponent ticker={selectedStock.ticker} />
-                  ) : null}
-                </SectionComponent>
-              </div>
-            </div>
+            <Tutorial
+              sections={sections}
+              currentSection={currentSection}
+              navigateToSection={navigateToSection}
+              chatHistory={chatHistory}
+              isLoading={isLoading}
+              userMessage={userMessage}
+              setUserMessage={setUserMessage}
+              sendMessage={sendMessage}
+              selectedStock={selectedStock}
+              selectedStockTicker={selectedStockTicker}
+              onSubmitAnswers={onSubmitAnswers}
+              updateSectionCompleted={updateSectionCompleted}
+              setSectionCompleted={setSectionCompleted}
+              completeSection={completeSection}
+              handleStockSelect={handleStockSelect}
+            />
           } />
           <Route path="/about" element={<About />} />
+          <Route path="/browse" element={
+            <Browse handleStockSelect={handleStockSelect} />
+          } />
         </Routes>
       </Router>
     </ChakraProvider >

@@ -14,6 +14,7 @@ const Navbar = () => {
           <Stack direction={'row'} spacing={7}>
             <Link href="/">Home</Link>
             <Link href="/about">About</Link>
+            <Link href="/browse">Browse</Link>
             <Link href="/tutorials">Tutorials</Link>
             <Link href="/contact">Contact</Link>
             <Button onClick={toggleColorMode}>
