@@ -2,20 +2,12 @@ import { ChakraProvider } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import CashFlowProjectionsComponent from './components/CashFlowProjectionsComponent.js';
-import ChatDrawer from './components/ChatDrawer.js';
-import FinancialStatements from './components/FinancialStatements';
-import GuideDrawer from './components/GuideDrawer';
-import InstructionsComponent from './components/InstructionsComponent';
-import IntroSection from './components/IntroSection';
-import SectionComponent from './components/SectionComponent';
-import StockSelection from './components/StockSelection';
-import UserSubmissionComponent from './components/UserSubmissionComponent';
 import useChat from './hooks/useChat';
 import Navbar from './components/Navbar';
 import About from './pages/About';
 import Tutorial from './pages/Tutorial';
 import Browse from './pages/Browse';
+import StockPage from './pages/StockPage'; // the page component
 
 function App() {
   const [currentSection, setCurrentSection] = useState(0);
@@ -108,6 +100,7 @@ function App() {
           <Route path="/browse" element={
             <Browse handleStockSelect={handleStockSelect} />
           } />
+          <Route path="/stock/:ticker" element={<StockPage />} />
         </Routes>
       </Router>
     </ChakraProvider >

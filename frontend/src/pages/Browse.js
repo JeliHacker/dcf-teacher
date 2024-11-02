@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, VStack, Input } from "@chakra-ui/react";
 import Autosuggest from "react-autosuggest";
 import StockSelection from "../components/StockSelection";
+import { useNavigate } from 'react-router-dom';
 
 // Example stock data - this could come from an API in the real app
 const stockData = [
@@ -51,9 +52,13 @@ const Browse = ({ handleStockSelect }) => {
     </div>
   );
 
+  const navigate = useNavigate();
+
   // When the user selects a suggestion
   const onSuggestionSelected = (event, { suggestion }) => {
     handleStockSelect(suggestion.ticker); // Call handleStockSelect with the selected stock ticker
+    const ticker = suggestion.ticker;
+    navigate(`/stock/${ticker}`);
   };
 
   // Input properties for the Autosuggest component
