@@ -3,7 +3,7 @@ from annual_report_data import get_cik_from_symbol, HEADERS
 import time
 
 ALTERNATIVE_KEYS = {
-    'capital_expenditures': ['PaymentsToAcquirePropertyPlantAndEquipment', 'PaymentsForCapitalImprovements', 'PaymentsToAcquireProductiveAssets'],
+    'capital_expenditures': ['PaymentsToAcquireMachineryAndEquipment', 'PaymentsToAcquirePropertyPlantAndEquipment', 'PaymentsForCapitalImprovements', 'PaymentsToAcquireProductiveAssets'],
     'cash_flows_from_operations': ['NetCashProvidedByUsedInOperatingActivities', 'NetCashProvidedByUsedInOperatingActivitiesContinuingOperations'],
     'long_term_debt': ['LongTermDebt', 'LongTermDebtNoncurrent', 'LongTermDebtAndCapitalLeaseObligations'],
     'revenue': ['Revenues', 'RevenueFromContractWithCustomerExcludingAssessedTax', 'SalesRevenueNet', 'SalesRevenueServicesNet'],
@@ -40,6 +40,7 @@ def get_data_given_ticker_and_year_and_category(ticker, year, category):
         return None
     
     cik = get_cik_from_symbol(ticker.upper(), add_zeroes=True)
+    print(f"cik for {ticker.upper()}: {cik}")
     
     time.sleep(0.11)
     
@@ -68,4 +69,4 @@ def get_data_given_ticker_and_year_and_category(ticker, year, category):
 
 
 if __name__ == '__main__':
-    print(get_data_given_ticker_and_year_and_category('aapl', '2022', 'cash_flows_from_operations'))
+    print(get_data_given_ticker_and_year_and_category('titn', '2024', 'capital_expenditures'))

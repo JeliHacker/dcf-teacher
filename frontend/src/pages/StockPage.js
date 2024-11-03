@@ -1,4 +1,10 @@
 import {
+    Accordion,
+    AccordionItem,
+    AccordionButton,
+    AccordionPanel,
+    AccordionIcon,
+    Box,
     Flex,
     Slider,
     SliderFilledTrack,
@@ -24,6 +30,8 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import FinancialStatements from '../components/FinancialStatements';
+import Sidebar from '../components/Sidebar';
 
 
 // Register the required Chart.js components
@@ -105,8 +113,8 @@ function StockPage() {
 
                     // Fetch both operating cash flows and capital expenditures
                     const [cashFlowResponse, capexResponse] = await Promise.all([
-                        axios.get(`${apiUrl}/api/sec_api?ticker=${ticker.ticker}&year=${year}&category=cash_flows_from_operations`),
-                        axios.get(`${apiUrl}/api/sec_api?ticker=${ticker.ticker}&year=${year}&category=capital_expenditures`)
+                        axios.get(`${apiUrl}/api/sec_api?ticker=${ticker}&year=${year}&category=cash_flows_from_operations`),
+                        axios.get(`${apiUrl}/api/sec_api?ticker=${ticker}&year=${year}&category=capital_expenditures`)
                     ]);
 
                     const operatingCashFlows = cashFlowResponse.data['cash_flows_from_operations'];
@@ -134,7 +142,7 @@ function StockPage() {
                     console.log("line 124, freeCashFlowData is empty");
                 }
 
-                let shares = await axios.get(`${apiUrl}/api/sec_api?ticker=${ticker.ticker}&year=${new Date().getFullYear() - 1}&category=shares_outstanding`);
+                let shares = await axios.get(`${apiUrl}/api/sec_api?ticker=${ticker}&year=${new Date().getFullYear() - 1}&category=shares_outstanding`);
                 setOutstandingShares(shares.data['shares_outstanding']);
 
             } catch (err) {
@@ -159,209 +167,216 @@ function StockPage() {
     }
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', width: '100%', paddingLeft: '10px', paddingRight: '10px' }}>
-            <Flex justifyContent='space-around' align='center' gap='20px' >
-                <Flex flexDirection='column' align='center' width={'45%'}>
+        <div style={{display: 'flex', flexDirection: 'row'}}>
+            <Sidebar />
+
+            <div style={{ display: 'flex', flexDirection: 'column', width: '100%', paddingRight: '10px' }}>
 
 
-                    {loading && <Spinner size='xl' color='green.500' />}
-                    <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                        <h2>Free Cash Flow History for {ticker.toUpperCase()}</h2>
-                        <table style={{ width: '100%' }}>
-                            <thead>
-                                <tr>
-                                    <th>Year</th>
-                                    <th>Operating Cash Flow</th>
-                                    <th>Capital Expenditures</th>
-                                    <th>Free Cash Flow</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {operatingCashFlows
-                                    .filter(entry => entry.year <= new Date().getFullYear() - 1)
-                                    .reverse()
-                                    .map((entry, index, array) => {
-                                        const currentFreeCashFlow = entry.operatingCashFlows && entry.capitalExpenditures
-                                            ? entry.operatingCashFlows - entry.capitalExpenditures
-                                            : null;
-
-                                        const previousEntry = array[index + 1]; // The next entry in the reversed array is the previous year
-                                        const previousFreeCashFlow = previousEntry?.operatingCashFlows && previousEntry.capitalExpenditures
-                                            ? previousEntry.operatingCashFlows - previousEntry.capitalExpenditures
-                                            : null;
-
-                                        const growthRate = previousFreeCashFlow && currentFreeCashFlow
-                                            ? ((currentFreeCashFlow - previousFreeCashFlow) / previousFreeCashFlow) * 100
-                                            : null;
-
-                                        return (
-                                            <tr key={entry.year}>
-                                                <td>{entry.year}</td>
-                                                <td>{entry.operatingCashFlows ? `$${entry.operatingCashFlows.toLocaleString()}` : '-'}</td>
-                                                <td>{entry.capitalExpenditures ? `$${entry.capitalExpenditures.toLocaleString()}` : '-'}</td>
-                                                <td>{currentFreeCashFlow !== null ? `$${currentFreeCashFlow.toLocaleString()}` : '-'}</td>
-                                                <td>{growthRate !== null ? `${growthRate.toFixed(2)}%` : '-'}</td> {/* Growth rate column */}
-                                            </tr>
-                                        );
-                                    })}
-                            </tbody>
-
-                        </table>
-                    </div>
-
-                    {error && <div>Error: {error}</div>}
-
-                    <Flex width='100%' justifyContent={'center'} alignItems={'center'} gap={4} mt={4} mb={4}>
-                        <Text fontSize="lg" fontWeight="bold">Free Cash Flow:</Text>
-
-                        <Input
-                            value={initialFCF}
-                            onChange={(e) => {
-                                const val = parseFloat(e.target.value);
-                                if (!isNaN(val) && val >= 0) {
-                                    setInitialFCF(val);
-                                }
-                            }}
-                            width="200px"  // Control input width
-                            textAlign="center"
-                        />
-
-                    </Flex>
-
-                    {cashFlows.length > 0 && (
-                        <table style={{ width: '100%' }}>
-                            <thead>
-                                <tr>
-                                    <th>Year</th>
-                                    <th>Future FCF</th>
-                                    <th>Discounted FCF</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {cashFlows.map((flow) => (
-                                    <tr key={flow.year}>
-                                        <td>{flow.year}</td>
-                                        <td>${Number(flow.futureFCF).toLocaleString()}</td>
-                                        <td>${Math.ceil(Number(flow.discountedFCF)).toLocaleString()}</td>
+                <Flex justifyContent='space-around' align='center' gap='20px' >
+                    <Flex flexDirection='column' align='center' width={'45%'}>
+                        {loading && <Spinner size='xl' color='green.500' />}
+                        <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                            <h2>Free Cash Flow History for {ticker.toUpperCase()}</h2>
+                            <table style={{ width: '100%' }}>
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Operating Cash Flow</th>
+                                        <th>Capital Expenditures</th>
+                                        <th>Free Cash Flow</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                </thead>
+                                <tbody>
+                                    {operatingCashFlows
+                                        .filter(entry => entry.year <= new Date().getFullYear() - 1)
+                                        .reverse()
+                                        .map((entry, index, array) => {
+                                            const currentFreeCashFlow = entry.operatingCashFlows && entry.capitalExpenditures
+                                                ? entry.operatingCashFlows - entry.capitalExpenditures
+                                                : null;
+
+                                            const previousEntry = array[index + 1]; // The next entry in the reversed array is the previous year
+                                            const previousFreeCashFlow = previousEntry?.operatingCashFlows && previousEntry.capitalExpenditures
+                                                ? previousEntry.operatingCashFlows - previousEntry.capitalExpenditures
+                                                : null;
+
+                                            const growthRate = previousFreeCashFlow && currentFreeCashFlow
+                                                ? ((currentFreeCashFlow - previousFreeCashFlow) / previousFreeCashFlow) * 100
+                                                : null;
+
+                                            return (
+                                                <tr key={entry.year}>
+                                                    <td>{entry.year}</td>
+                                                    <td>{entry.operatingCashFlows ? `$${entry.operatingCashFlows.toLocaleString()}` : '-'}</td>
+                                                    <td>{entry.capitalExpenditures ? `$${entry.capitalExpenditures.toLocaleString()}` : '-'}</td>
+                                                    <td>{currentFreeCashFlow !== null ? `$${currentFreeCashFlow.toLocaleString()}` : '-'}</td>
+                                                    <td>{growthRate !== null ? `${growthRate.toFixed(2)}%` : '-'}</td> {/* Growth rate column */}
+                                                </tr>
+                                            );
+                                        })}
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                        {error && <div>Error: {error}</div>}
+
+                        <Flex width='100%' justifyContent={'center'} alignItems={'center'} gap={4} mt={4} mb={4}>
+                            <Text fontSize="lg" fontWeight="bold">Free Cash Flow:</Text>
+
+                            <Input
+                                value={initialFCF}
+                                onChange={(e) => {
+                                    const val = parseFloat(e.target.value);
+                                    if (!isNaN(val) && val >= 0) {
+                                        setInitialFCF(val);
+                                    }
+                                }}
+                                width="200px"  // Control input width
+                                textAlign="center"
+                            />
+
+                        </Flex>
+
+                        {cashFlows.length > 0 && (
+                            <table style={{ width: '100%' }}>
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Future FCF</th>
+                                        <th>Discounted FCF</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {cashFlows.map((flow) => (
+                                        <tr key={flow.year}>
+                                            <td>{flow.year}</td>
+                                            <td>${Number(flow.futureFCF).toLocaleString()}</td>
+                                            <td>${Math.ceil(Number(flow.discountedFCF)).toLocaleString()}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+
+
+
+
+                    </Flex>
+
+
+                    <Flex flexDirection="column" justifyContent='flex-start' width="50%">
+                        <Flex direction="column" width={'100%'} gap={4} mt={4} mb={4}>
+
+                            <Flex alignItems="center" justifyContent="space-between" bg="lightblue" p={2} borderRadius="md">
+                                <Text fontSize="lg" fontWeight="bold">Total Value of Discounted Cash Flows:</Text>
+                                <Text fontSize="lg" fontWeight="bold">${totalValue.toLocaleString()}</Text>  {/* Format the number with commas */}
+                            </Flex>
+
+                            <Flex alignItems="center" justifyContent="space-between" bg="#F7D154" p={2} borderRadius="md">
+                                <Text fontSize="lg" fontWeight="bold">Outstanding Shares:</Text>
+                                <Text fontSize="lg" fontWeight="bold">${outstandingShares.toLocaleString()}</Text>  {/* Format the number with commas */}
+                            </Flex>
+
+                            <Flex alignItems="center" justifyContent="space-between" bg="lightgreen" p={2} borderRadius="md">
+                                <Text fontSize="lg" fontWeight="bold">Intrinsic Value per Share:</Text>
+                                <Text fontSize="lg" fontWeight="bold">${(totalValue / outstandingShares).toFixed(2).toLocaleString()}</Text>  {/* Calculate and format */}
+                            </Flex>
+
+                        </Flex>
+                        <Flex flexDirection="column" width='100%' mb={12}>
+                            <Text fontSize="lg" fontWeight="bold">Terminal Growth Rate:</Text>
+                            <Input
+                                value={growthRate}
+                                onChange={(e) => {
+                                    const val = parseFloat(e.target.value);
+                                    if (!isNaN(val) && val >= 0) {
+                                        setGrowth(val);
+                                    }
+                                }}
+                                mb={4}
+                            />
+                            <Slider
+                                defaultValue={0}
+                                value={growthRate}
+                                min={-50}
+                                max={100}
+                                onChange={(val) => { setGrowth(val); }}
+                            >
+                                <SliderMark value={-50} {...labelStyles}>
+                                    -50%
+                                </SliderMark>
+                                <SliderMark value={0} {...labelStyles}>
+                                    0%
+                                </SliderMark>
+                                <SliderMark value={100} {...labelStyles}>
+                                    100%
+                                </SliderMark>
+                                <SliderTrack bg='green.100'>
+                                    <SliderFilledTrack bg='green' />
+                                </SliderTrack>
+                                <SliderThumb boxSize={6} />
+                            </Slider>
+                        </Flex>
+
+                        <Flex flexDirection="column" width='100%' mb={12}>
+                            <Text fontSize="lg" fontWeight="bold">Discount Rate:</Text>
+                            <Input
+                                value={discountRate}
+                                onChange={(e) => {
+                                    const val = parseFloat(e.target.value);
+                                    if (!isNaN(val) && val >= 0) {
+                                        setDiscount(val);
+                                    }
+                                }}
+                                mb={4}
+                            />
+                            <Slider
+                                value={discountRate}
+                                min={-10}
+                                max={50}
+                                onChange={(val) => { setDiscount(val); }}
+                            >
+                                <SliderMark value={-10} {...labelStyles}>
+                                    -10%
+                                </SliderMark>
+                                <SliderMark value={0} {...labelStyles}>
+                                    0%
+                                </SliderMark>
+                                <SliderMark value={10} {...labelStyles}>
+                                    10%
+                                </SliderMark>
+                                <SliderMark value={20} {...labelStyles}>
+                                    20%
+                                </SliderMark>
+                                <SliderMark value={30} {...labelStyles}>
+                                    30%
+                                </SliderMark>
+                                <SliderMark value={40} {...labelStyles}>
+                                    40%
+                                </SliderMark>
+                                <SliderMark value={50} {...labelStyles}>
+                                    50%+
+                                </SliderMark>
+                                <SliderTrack bg='red.100'>
+                                    <SliderFilledTrack bg='tomato' />
+                                </SliderTrack>
+                                <SliderThumb boxSize={6} />
+                            </Slider>
+                        </Flex>
+
+
+                        <div style={{ width: '100%', height: '400px' }}>
+                            <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
+                        </div>
+                    </Flex>
 
 
 
 
                 </Flex>
-
-
-                <Flex flexDirection="column" justifyContent='flex-start' width="50%">
-                    <Flex direction="column" width={'100%'} gap={4} mt={4} mb={4}>
-
-                        <Flex alignItems="center" justifyContent="space-between" bg="lightblue" p={2} borderRadius="md">
-                            <Text fontSize="lg" fontWeight="bold">Total Value of Discounted Cash Flows:</Text>
-                            <Text fontSize="lg" fontWeight="bold">${totalValue.toLocaleString()}</Text>  {/* Format the number with commas */}
-                        </Flex>
-
-                        <Flex alignItems="center" justifyContent="space-between" bg="lightgreen" p={2} borderRadius="md">
-                            <Text fontSize="lg" fontWeight="bold">Outstanding Shares:</Text>
-                            <Text fontSize="lg" fontWeight="bold">${outstandingShares.toLocaleString()}</Text>  {/* Format the number with commas */}
-                        </Flex>
-
-                        <Flex alignItems="center" justifyContent="space-between" bg="lightcoral" p={2} borderRadius="md">
-                            <Text fontSize="lg" fontWeight="bold">Intrinsic Value per Share:</Text>
-                            <Text fontSize="lg" fontWeight="bold">${(totalValue / outstandingShares).toFixed(2).toLocaleString()}</Text>  {/* Calculate and format */}
-                        </Flex>
-
-                    </Flex>
-                    <Flex flexDirection="column" width='100%' mb={12}>
-                        <Text fontSize="lg" fontWeight="bold">Terminal Growth Rate:</Text>
-                        <Input
-                            value={growthRate}
-                            onChange={(e) => {
-                                const val = parseFloat(e.target.value);
-                                if (!isNaN(val) && val >= 0) {
-                                    setGrowth(val);
-                                }
-                            }}
-                            mb={4}
-                        />
-                        <Slider
-                            defaultValue={0}
-                            value={growthRate}
-                            min={-50}
-                            max={100}
-                            onChange={(val) => { setGrowth(val); }}
-                        >
-                            <SliderMark value={-50} {...labelStyles}>
-                                -50%
-                            </SliderMark>
-                            <SliderMark value={0} {...labelStyles}>
-                                0%
-                            </SliderMark>
-                            <SliderMark value={100} {...labelStyles}>
-                                100%
-                            </SliderMark>
-                            <SliderTrack bg='green.100'>
-                                <SliderFilledTrack bg='green' />
-                            </SliderTrack>
-                            <SliderThumb boxSize={6} />
-                        </Slider>
-                    </Flex>
-
-                    <Flex flexDirection="column" width='100%' mb={12}>
-                        <Text fontSize="lg" fontWeight="bold">Discount Rate:</Text>
-                        <Input
-                            value={discountRate}
-                            onChange={(e) => {
-                                const val = parseFloat(e.target.value);
-                                if (!isNaN(val) && val >= 0) {
-                                    setDiscount(val);
-                                }
-                            }}
-                            mb={4}
-                        />
-                        <Slider
-                            value={discountRate}
-                            min={-10}
-                            max={50}
-                            onChange={(val) => { setDiscount(val); }}
-                        >
-                            <SliderMark value={-10} {...labelStyles}>
-                                -10%
-                            </SliderMark>
-                            <SliderMark value={0} {...labelStyles}>
-                                0%
-                            </SliderMark>
-                            <SliderMark value={10} {...labelStyles}>
-                                10%
-                            </SliderMark>
-                            <SliderMark value={20} {...labelStyles}>
-                                20%
-                            </SliderMark>
-                            <SliderMark value={30} {...labelStyles}>
-                                30%
-                            </SliderMark>
-                            <SliderMark value={40} {...labelStyles}>
-                                40%
-                            </SliderMark>
-                            <SliderMark value={50} {...labelStyles}>
-                                50%+
-                            </SliderMark>
-                            <SliderTrack bg='red.100'>
-                                <SliderFilledTrack bg='tomato' />
-                            </SliderTrack>
-                            <SliderThumb boxSize={6} />
-                        </Slider>
-                    </Flex>
-
-
-                    <div style={{ width: '100%', height: '400px' }}>
-                        <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
-                    </div>
-                </Flex>
-
-            </Flex>
+            </div>
         </div>
     );
 }

@@ -11,7 +11,7 @@ const Navbar = () => {
       <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
         <Box fontWeight="bold" fontSize="lg">DCF Teacher</Box>
         <Flex alignItems={'center'}>
-          <Stack direction={'row'} spacing={7}>
+          <Stack direction={'row'} spacing={7} align={'center'}>
             <Link href="/">Home</Link>
             <Link href="/about">About</Link>
             <Link href="/browse">Browse</Link>
