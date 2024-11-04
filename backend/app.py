@@ -145,9 +145,13 @@ def get_category_data():
     
     print("api/sec_api: ", ticker, year, category)
     
-    value = get_data_given_ticker_and_year_and_category(ticker, year, category)
+    if category:
+        value = get_data_given_ticker_and_year_and_category(ticker, year, category)
     
-    return jsonify({category: value})
+        return jsonify({category: value})
+    
+    else:
+        return jsonify({"foo": "bar"})
 
 
 if __name__ == "__main__":

@@ -99,9 +99,9 @@ function CashFlowProjectionsComponent(ticker) {
                 const currentYear = new Date().getFullYear();
                 let currTotalValue = 0;
 
-                for (let i = 1; i < 10; i++) {
+                for (let i = 1; i < 20; i++) {
                     const year = currentYear - i;
-                
+
                     // Fetch both operating cash flows and capital expenditures
                     const [cashFlowResponse, capexResponse] = await Promise.all([
                         axios.get(`${apiUrl}/api/sec_api?ticker=${ticker.ticker}&year=${year}&category=cash_flows_from_operations`),
@@ -179,17 +179,32 @@ function CashFlowProjectionsComponent(ticker) {
                                 {operatingCashFlows
                                     .filter(entry => entry.year <= new Date().getFullYear() - 1)
                                     .reverse()
-                                    .map((entry) => (
-                                        <tr key={entry.year}>
-                                            <td>{entry.year}</td>
-                                            <td>{entry.operatingCashFlows ? `$${entry.operatingCashFlows.toLocaleString()}` : '-'}</td>
-                                            <td>{entry.capitalExpenditures ? `$${entry.capitalExpenditures.toLocaleString()}` : '-'}</td>
-                                            <td>{entry.operatingCashFlows && entry.capitalExpenditures
-                                                ? `$${(entry.operatingCashFlows - entry.capitalExpenditures).toLocaleString()}`
-                                                : '-'}</td>
-                                        </tr>
-                                    ))}
+                                    .map((entry, index, array) => {
+                                        const currentFreeCashFlow = entry.operatingCashFlows && entry.capitalExpenditures
+                                            ? entry.operatingCashFlows - entry.capitalExpenditures
+                                            : null;
+
+                                        const previousEntry = array[index + 1]; // The next entry in the reversed array is the previous year
+                                        const previousFreeCashFlow = previousEntry?.operatingCashFlows && previousEntry.capitalExpenditures
+                                            ? previousEntry.operatingCashFlows - previousEntry.capitalExpenditures
+                                            : null;
+
+                                        const growthRate = previousFreeCashFlow && currentFreeCashFlow
+                                            ? ((currentFreeCashFlow - previousFreeCashFlow) / previousFreeCashFlow) * 100
+                                            : null;
+
+                                        return (
+                                            <tr key={entry.year}>
+                                                <td>{entry.year}</td>
+                                                <td>{entry.operatingCashFlows ? `$${entry.operatingCashFlows.toLocaleString()}` : '-'}</td>
+                                                <td>{entry.capitalExpenditures ? `$${entry.capitalExpenditures.toLocaleString()}` : '-'}</td>
+                                                <td>{currentFreeCashFlow !== null ? `$${currentFreeCashFlow.toLocaleString()}` : '-'}</td>
+                                                <td>{growthRate !== null ? `${growthRate.toFixed(2)}%` : '-'}</td> {/* Growth rate column */}
+                                            </tr>
+                                        );
+                                    })}
                             </tbody>
+
                         </table>
                     </div>
 

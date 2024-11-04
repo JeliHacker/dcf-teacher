@@ -1,16 +1,13 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import CashFlowProjectionsComponent from './components/CashFlowProjectionsComponent.js';
-import ChatDrawer from './components/ChatDrawer.js';
-import FinancialStatements from './components/FinancialStatements';
-import GuideDrawer from './components/GuideDrawer';
-import InstructionsComponent from './components/InstructionsComponent';
-import IntroSection from './components/IntroSection';
-import SectionComponent from './components/SectionComponent';
-import StockSelection from './components/StockSelection';
-import UserSubmissionComponent from './components/UserSubmissionComponent';
 import useChat from './hooks/useChat';
+import Navbar from './components/Navbar';
+import About from './pages/About';
+import Tutorial from './pages/Tutorial';
+import Browse from './pages/Browse';
+import StockPage from './pages/StockPage'; // the page component
 
 function App() {
   const [currentSection, setCurrentSection] = useState(0);
@@ -77,81 +74,36 @@ function App() {
 
   return (
     <ChakraProvider>
-      <div className="App">
-        <div className='right-column'>
-          <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-around' }}>
-            <GuideDrawer
-              className="GuideDrawer"
-              currentSection={sections[currentSection].title}
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={
+            <Tutorial
               sections={sections}
+              currentSection={currentSection}
               navigateToSection={navigateToSection}
-            />
-            <ChatDrawer
               chatHistory={chatHistory}
               isLoading={isLoading}
               userMessage={userMessage}
               setUserMessage={setUserMessage}
               sendMessage={sendMessage}
-              ticker={selectedStock !== null ? selectedStock.ticker : ''}
+              selectedStock={selectedStock}
+              selectedStockTicker={selectedStockTicker}
+              onSubmitAnswers={onSubmitAnswers}
+              updateSectionCompleted={updateSectionCompleted}
+              setSectionCompleted={setSectionCompleted}
+              completeSection={completeSection}
+              handleStockSelect={handleStockSelect}
             />
-          </div>
-          <hr className='separator' />
-          <UserSubmissionComponent
-            currentSection={currentSection}
-            sections={sections}
-            onSubmit={onSubmitAnswers}
-            selectedStockTicker={selectedStockTicker}
-            setSectionCompleted={updateSectionCompleted}
-          />
-        </div>
-        <div className="Panel2">
-          <SectionComponent
-            title={sections[currentSection].title}
-            content={sections[currentSection].content}
-            onComplete={completeSection}
-            completed={sections[currentSection].completed}
-            setSectionCompleted={setSectionCompleted}
-            sectionIndex={currentSection}
-            navigateToSection={navigateToSection}
-          >
-            {currentSection === 0 ? (
-              <InstructionsComponent text='The "cash flows" in discounted cash flows are free cash flow. Free cash flow is cash the company is bringin in minus any capital expenditures.' />
-            ) : currentSection === 1 ? (
-              <IntroSection
-                title={sections[currentSection].title}
-                onComplete={completeSection}
-                completed={sections[currentSection].completed}
-              />
-            ) : currentSection === 2 ? (
-              <StockSelection onSelectStock={handleStockSelect} />
-            ) : currentSection === 3 && selectedStock ? (
-              <FinancialStatements
-                cik={selectedStock.cik}
-                accessionNumber={selectedStock.accessionNumber}
-                ticker={selectedStock.ticker}
-                onComplete={completeSection}
-              />
-            ) : currentSection === -1 && selectedStock ? (
-              <FinancialStatements
-                cik={selectedStock.cik}
-                accessionNumber={selectedStock.accessionNumber}
-                ticker={selectedStock.ticker}
-                onComplete={completeSection}
-              />
-            ) : currentSection === -1 && selectedStock ? (
-              <FinancialStatements
-                cik={selectedStock.cik}
-                accessionNumber={selectedStock.accessionNumber}
-                ticker={selectedStock.ticker}
-                onComplete={completeSection}
-              />
-            ) : currentSection === 4 && selectedStock ? (
-              <CashFlowProjectionsComponent ticker={selectedStock.ticker} />
-            ) : null}
-          </SectionComponent>
-        </div>
-      </div>
-    </ChakraProvider>
+          } />
+          <Route path="/about" element={<About />} />
+          <Route path="/browse" element={
+            <Browse handleStockSelect={handleStockSelect} />
+          } />
+          <Route path="/stock/:ticker" element={<StockPage />} />
+        </Routes>
+      </Router>
+    </ChakraProvider >
   );
 }
 
