@@ -276,7 +276,11 @@ function StockPage() {
 
                             <Flex alignItems="center" justifyContent="space-between" bg="#F7D154" p={2} borderRadius="md">
                                 <Text fontSize="lg" fontWeight="bold">Outstanding Shares:</Text>
-                                <Text fontSize="lg" fontWeight="bold">${outstandingShares.toLocaleString()}</Text>  {/* Format the number with commas */}
+                                <Text fontSize="lg" fontWeight="bold">
+                                {outstandingShares != null
+                                    ? `$${outstandingShares.toLocaleString()}`
+                                    : 'N/A'}
+                                </Text>  {/* Format the number with commas */}
                             </Flex>
 
                             <Flex alignItems="center" justifyContent="space-between" bg="lightgreen" p={2} borderRadius="md">
